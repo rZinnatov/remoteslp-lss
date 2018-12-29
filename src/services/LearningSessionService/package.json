@@ -1,0 +1,5 @@
+{
+    "name" : "learning-state-service",
+    "main" : "./index.js"
+}
+  
