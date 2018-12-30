@@ -13,14 +13,30 @@ async function _getDb() {
         dispose: () => mongoClient.close()
     };
 }
+function _removeUndefinedProperties(object) {
+    for (const key in object) {
+        if (object[key] === undefined) {
+            delete object[key];
+        }
+    }
+}
 
 module.exports = class Storage {
-    async select(id) {
+    async selectById(id) {
         const db = await _getDb();
         const learningSession = await db.collection.findOne({ _id: new ObjectID(id) });
         db.dispose();
 
         return learningSession;
+    }
+    async where(filterObject) {
+        _removeUndefinedProperties(filterObject);
+
+        const db = await _getDb();
+        const learningSessions = await db.collection.find(filterObject).toArray();
+        db.dispose();
+
+        return learningSessions;
     }
     async insert(session) {
         const db = await _getDb();
@@ -32,5 +48,27 @@ module.exports = class Storage {
         }
 
         return result.ops[0];
+    }
+    async delete(filterObject) {
+        _removeUndefinedProperties(filterObject);
+
+        const db = await _getDb();
+        const result = await db.collection.deleteMany(filterObject);
+        db.dispose();
+
+        return result.deletedCount;
+    }
+    async deleteAll() {
+        const db = await _getDb();
+        const result = await db.collection.drop();
+        // TODO: Check what the result exactly is
+        db.dispose();
+    }
+    async deleteById(id) {
+        const db = await _getDb();
+        const result = await db.collection.deleteOne({ _id: new ObjectID(id) });
+        db.dispose();
+
+        return result.deletedCount;
     }
 };

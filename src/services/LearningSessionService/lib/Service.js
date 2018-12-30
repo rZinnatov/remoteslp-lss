@@ -14,8 +14,18 @@ module.exports = class Service {
     }
 
     async getSession(id) {
-        const item = await this.storage.select(id);
+        const item = await this.storage.selectById(id);
+        if (item === null) {
+            return null;
+        }
         return new LearningSession(item._id, item.clientId, item.state);
+    }
+    async getSessions(clientId) {
+        const items = await this.storage.where({ clientId: clientId });
+        if (items === null) {
+            return [];
+        }
+        return items.map((item) => new LearningSession(item._id, item.clientId, item.state));
     }
     async registerNew(clientId) {
         const item = await this.storage.insert({
@@ -24,5 +34,14 @@ module.exports = class Service {
         });
 
         return new LearningSession(item._id, item.clientId, item.state);
+    }
+    async removeAll() {
+        return await this.storage.deleteAll();
+    }
+    async removeSession(id) {
+        return await this.storage.deleteById(id);
+    }
+    async removeSessions(clientId) {
+        return await this.storage.delete({ clientId: clientId });
     }
 };

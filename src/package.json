@@ -4,8 +4,8 @@
   "description": "SaaS for remote learning from your data",
   "main": "index.js",
   "scripts": {
-    "unit-test": "jest --testRegex=\".+/tests/.*\\.unit\\.js\"",
-    "integration-test": "jest --testRegex=\".+/tests/.*\\.integration\\.js\"",
+    "test:unit": "jest --testRegex=\".+/tests/.*\\.unit\\.js\" --forceExit --detectOpenHandles",
+    "test:integration": "jest --testRegex=\".+/tests/.*\\.integration\\.js\" --forceExit --detectOpenHandles",
     "start": "node index.js"
   },
   "author": "Roman Zinnatov",
