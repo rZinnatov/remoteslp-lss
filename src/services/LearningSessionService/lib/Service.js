@@ -1,32 +1,28 @@
-class Session {
-    constructor(id) {
-        this.id = id;
-    }
-}
+const Storage = require('./Storage');
+const LearningSession = require('../../../domain/LearningSession');
+const LearningSessionStates = require('../../../domain/LearningSessionStates');
 
 module.exports = class Service {
-    constructor(getNewId) {
-        if (getNewId === undefined) {
-            throw new ReferenceError('getNewId is not defined');
+    constructor(storage) {
+        if (storage == undefined) {
+            storage = new Storage();
         }
-        if (typeof getNewId !== 'function') {
-            throw new TypeError('getNewId must be a function');
+        if (typeof storage !== 'object') {
+            throw new TypeError('storage must be an object');
         }
-        this.getNewId = getNewId;
+        this.storage = storage;
     }
-    registerNew() {
-        return new Promise(
-            resolve => {
-                const session = new Session(
-                    this.getNewId() // I hope we're all lucky enough
-                );
-                // TODO: Store in DB
-                resolve(session);
-            }
-        );
+
+    async getSession(id) {
+        const item = await this.storage.select(id);
+        return new LearningSession(item._id, item.clientId, item.state);
     }
-    isExists(id) {
-        // TODO: Check in DB
-        return false;
+    async registerNew(clientId) {
+        const item = await this.storage.insert({
+            clientId: clientId,
+            state: LearningSessionStates.init
+        });
+
+        return new LearningSession(item._id, item.clientId, item.state);
     }
 };

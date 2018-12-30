@@ -1,3 +1,4 @@
+// TODO: Use jest
 const LearningSessionService = require('./services/LearningSessionService/');
 
 const learningSessionService = new LearningSessionService();

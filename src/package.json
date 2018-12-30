@@ -4,13 +4,15 @@
   "description": "SaaS for remote learning from your data",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "unit-test": "jest --testRegex=\".+/tests/.*\\.unit\\.js\"",
+    "integration-test": "jest --testRegex=\".+/tests/.*\\.integration\\.js\"",
     "start": "node index.js"
   },
   "author": "Roman Zinnatov",
   "license": "MIT",
   "dependencies": {
     "express": "^4.16.4",
+    "mongodb": "^3.1.10",
     "uuid": "^3.3.2"
   },
   "devDependencies": {
