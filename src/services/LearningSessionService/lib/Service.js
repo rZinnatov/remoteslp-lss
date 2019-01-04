@@ -1,15 +1,8 @@
-const Storage = require('./Storage');
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionStates = require('../../../domain/LearningSessionStates');
 
 module.exports = class Service {
     constructor(storage) {
-        if (storage == undefined) {
-            storage = new Storage();
-        }
-        if (typeof storage !== 'object') {
-            throw new TypeError('storage must be an object');
-        }
         this.storage = storage;
     }
 
@@ -18,6 +11,7 @@ module.exports = class Service {
         if (item === null) {
             return null;
         }
+
         return new LearningSession(item._id, item.clientId, item.state);
     }
     async getSessions(clientId) {
@@ -25,6 +19,7 @@ module.exports = class Service {
         if (items === null) {
             return [];
         }
+        
         return items.map((item) => new LearningSession(item._id, item.clientId, item.state));
     }
     async registerNew(clientId) {

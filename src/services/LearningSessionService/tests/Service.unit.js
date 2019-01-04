@@ -1,34 +1,31 @@
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionStates = require('../../../domain/LearningSessionStates');
-const LearningSessionService = require('./../lib/Service');
+const createLearningSessionService = require('../index.js');
 
 
-test('LearningSessionService ctor does not require storage', () => {
-    expect(() => new LearningSessionService()).not.toThrow();
+const fakeId = 'fakeId-123';
+const fakeClientId = 'fakeClientId-123';
+const fakeState = 123;
 
-    const learningSessionService = new LearningSessionService();
+
+test('LearningSessionService ctor does not require any parameters', () => {
+    expect(() => createLearningSessionService()).not.toThrow();
+
+    const learningSessionService = createLearningSessionService();
     expect(learningSessionService).toHaveProperty('storage');
     expect(typeof learningSessionService.storage).toBe('object');
     expect(learningSessionService.storage).not.toBe(null);
 });
-test('LearningSessionService ctor requires storage to be an object', () => {
-    expect(() => new LearningSessionService(123)).toThrow(TypeError);
-    expect(() => new LearningSessionService('123')).toThrow(TypeError);
-    expect(() => new LearningSessionService(Symbol())).toThrow(TypeError);
-    expect(() => new LearningSessionService(true)).toThrow(TypeError);
-
-    expect(() => new LearningSessionService({})).not.toThrow(TypeError);
-});
-test('LearningSessionService.getSession returns a valid session', async () => {
+test('LearningSessionService.getSession returns a valid session', async (done) => {
     // <-- Prepare -->
-    const fakeId = '123-fakeId-456';
-    const fakeClientId = '123-fakeClientId-456';
-    const fakeState = 123;
     const fakeSession = { _id: fakeId, clientId: fakeClientId, state: fakeState };
-    const storageMock = {
-        selectById: () => new Promise(resolve => resolve(fakeSession))
+    const configMock = {
+        settings: {}, // to prevent loading settings file
+        storage: {
+            selectById: () => new Promise(resolve => resolve(fakeSession))
+        }
     };
-    const learningSessionService = new LearningSessionService(storageMock);
+    const learningSessionService = createLearningSessionService(configMock);
     // </- Prepare -->
     
     // <-- Run -->
@@ -38,18 +35,20 @@ test('LearningSessionService.getSession returns a valid session', async () => {
     // <-- Check -->
     expect(session).toEqual(new LearningSession(fakeId, fakeClientId, fakeState));
     // </- Check -->
+
+    done();
 });
-test('LearningSessionService.getSessions returns a valid sessions', async () => {
+test('LearningSessionService.getSessions returns a valid sessions', async (done) => {
     // <-- Prepare -->
-    const fakeId = '123-fakeId-456';
-    const fakeClientId = '123-fakeClientId-456';
-    const fakeState = 123;
     const fakeSession = { _id: fakeId, clientId: fakeClientId, state: fakeState };
     const fakeSessions = [fakeSession, fakeSession, fakeSession];
-    const storageMock = {
-        where: () => new Promise(resolve => resolve(fakeSessions))
+    const configMock = {
+        settings: {}, // to prevent loading settings file
+        storage: {
+            where: () => new Promise(resolve => resolve(fakeSessions))
+        }
     };
-    const learningSessionService = new LearningSessionService(storageMock);
+    const learningSessionService = createLearningSessionService(configMock);
     // </- Prepare -->
     
     // <-- Run -->
@@ -59,16 +58,19 @@ test('LearningSessionService.getSessions returns a valid sessions', async () => 
     // <-- Check -->
     sessions.forEach(session => expect(session.clientId).toEqual(fakeClientId));
     // </- Check -->
+
+    done();
 });
-test('LearningSessionService.registerNew returns a valid session', async () => {
+test('LearningSessionService.registerNew returns a valid session', async (done) => {
     // <-- Prepare -->
-    const fakeId = '123-fakeId-456';
-    const fakeClientId = '123-fakeClientId-456';
     const fakeItem = { _id: fakeId, clientId: fakeClientId, state: LearningSessionStates.init };
-    const storageMock = {
-        insert: () => new Promise(resolve => resolve(fakeItem))
+    const configMock = {
+        settings: {}, // to prevent loading settings file
+        storage: {
+            insert: () => new Promise(resolve => resolve(fakeItem))
+        }
     };
-    const learningSessionService = new LearningSessionService(storageMock);
+    const learningSessionService = createLearningSessionService(configMock);
     // </- Prepare -->
     
     // <-- Run -->
@@ -78,4 +80,6 @@ test('LearningSessionService.registerNew returns a valid session', async () => {
     // <-- Check -->
     expect(session).toEqual(new LearningSession(fakeId, fakeClientId));
     // </- Check -->
+
+    done();
 });
