@@ -61,7 +61,7 @@ test('LearningSessionService.getSessions returns a valid sessions', async (done)
 
     done();
 });
-test('LearningSessionService.registerNew returns a valid session', async (done) => {
+test('LearningSessionService.createSession returns a valid session', async (done) => {
     // <-- Prepare -->
     const fakeItem = { _id: fakeId, clientId: fakeClientId, state: LearningSessionStates.init };
     const configMock = {
@@ -74,7 +74,7 @@ test('LearningSessionService.registerNew returns a valid session', async (done) 
     // </- Prepare -->
     
     // <-- Run -->
-    const session = await learningSessionService.registerNew(fakeClientId);
+    const session = await learningSessionService.createSession(fakeClientId);
     // </- Run -->
 
     // <-- Check -->

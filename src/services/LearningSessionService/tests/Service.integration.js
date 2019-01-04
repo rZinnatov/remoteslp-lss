@@ -26,7 +26,7 @@ test('LearningSessionService can select newly registered session', async (done) 
 
     try
     {
-        registeredSession = await learningSessionService.registerNew(clientId);
+        registeredSession = await learningSessionService.createSession(clientId);
         selectedSession = await learningSessionService.getSession(registeredSession.id);
 
     } catch (e) {
@@ -41,10 +41,10 @@ test('LearningSessionService can select newly registered session', async (done) 
 test('LearningSessionService can select list of sessions of a client', async (done) => {
     const learningSessionService = createLearningSessionService();
 
-    await learningSessionService.registerNew(clientId);
-    await learningSessionService.registerNew(clientId);
-    await learningSessionService.registerNew(clientId);
-    await learningSessionService.registerNew(anotherClientId);
+    await learningSessionService.createSession(clientId);
+    await learningSessionService.createSession(clientId);
+    await learningSessionService.createSession(clientId);
+    await learningSessionService.createSession(anotherClientId);
 
     let learningSessions = undefined;
     try

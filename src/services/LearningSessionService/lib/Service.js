@@ -1,6 +1,7 @@
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionStates = require('../../../domain/LearningSessionStates');
 
+
 module.exports = class Service {
     constructor(storage) {
         this.storage = storage;
@@ -19,10 +20,10 @@ module.exports = class Service {
         if (items === null) {
             return [];
         }
-        
+
         return items.map((item) => new LearningSession(item._id, item.clientId, item.state));
     }
-    async registerNew(clientId) {
+    async createSession(clientId) {
         const item = await this.storage.insert({
             clientId: clientId,
             state: LearningSessionStates.init

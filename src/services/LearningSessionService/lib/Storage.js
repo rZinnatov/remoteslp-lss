@@ -1,6 +1,7 @@
 const ObjectID = require('mongodb').ObjectID;
 const MongoClient = require('mongodb').MongoClient;
 
+
 async function _getDb(config) {
     // TODO: use connection pool
     // cleanup via https://github.com/jtlapp/node-cleanup
