@@ -8,9 +8,11 @@ module.exports = class Factory {
         // TODO: Verify the settings object
     }
 
-    createNewApiInstance(service) {
+    createNewApiInstance(service, api) {
         return new Api(
-            service || this.createNewServiceInstance()
+            this.settings.api,
+            service || this.createNewServiceInstance(),
+            api
         );
     }
     createNewServiceInstance(storage) {

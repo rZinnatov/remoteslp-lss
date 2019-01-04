@@ -70,9 +70,10 @@ module.exports = class Storage {
     }
     async deleteAll() {
         const db = await _getDb(this.settings);
-        const result = await db.collection.drop();
-        // TODO: Check what the result exactly is
+        const result = await db.collection.deleteMany();
         db.dispose();
+
+        return result.deletedCount;
     }
     async deleteById(id) {
         const db = await _getDb(this.settings);

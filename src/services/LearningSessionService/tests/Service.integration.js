@@ -3,26 +3,22 @@ const LearningSessionServiceFactory = require('../index.js');
 const clientId = 'client-123';
 const anotherClientId = 'another-client-123';
 
-beforeEach(async (done) => {
+beforeEach(async () => {
     const learningSessionService = new LearningSessionServiceFactory()
         .createNewServiceInstance()
     ;
     await learningSessionService.removeSessions(clientId);
     await learningSessionService.removeSessions(anotherClientId);
-
-    done();
 });
-afterAll(async (done) => {
+afterAll(async () => {
     const learningSessionService = new LearningSessionServiceFactory()
         .createNewServiceInstance()
     ;
     await learningSessionService.removeSessions(clientId);
     await learningSessionService.removeSessions(anotherClientId);
-
-    done();
 });
 
-test('LearningSessionService can select newly registered session', async (done) => {
+test('LearningSessionService can select newly registered session', async () => {
     const learningSessionService = new LearningSessionServiceFactory()
         .createNewServiceInstance()
     ;
@@ -35,16 +31,14 @@ test('LearningSessionService can select newly registered session', async (done) 
         registeredSession = await learningSessionService.createSession(clientId);
         selectedSession = await learningSessionService.getSession(registeredSession.id);
 
-    } catch (e) {
-        console.error(e);
-        expect(e).toBe(undefined);
+    } catch (error) {
+        console.error(error);
+        expect(error).toBe(undefined);
     }
 
     expect(selectedSession).toEqual(registeredSession);
-
-    done();
 });
-test('LearningSessionService can select list of sessions of a client', async (done) => {
+test('LearningSessionService can select list of sessions of a client', async () => {
     const learningSessionService = new LearningSessionServiceFactory()
         .createNewServiceInstance()
     ;
@@ -59,13 +53,11 @@ test('LearningSessionService can select list of sessions of a client', async (do
     {
         learningSessions = await learningSessionService.getSessions(clientId);
 
-    } catch (e) {
-        console.error(e);
-        expect(e).toBe(undefined);
+    } catch (error) {
+        console.error(error);
+        expect(error).toBe(undefined);
     }
     
     expect(learningSessions.length).toEqual(3);
     learningSessions.forEach(session => expect(session.clientId).toEqual(clientId));
-
-    done();
 });

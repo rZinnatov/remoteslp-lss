@@ -8,7 +8,7 @@ const fakeClientId = 'fakeClientId-123';
 const fakeState = 123;
 
 
-test('LearningSessionService.getSession returns a valid session', async (done) => {
+test('LearningSessionService.getSession returns a valid session', async () => {
     // <-- Prepare -->
     const fakeSession = { _id: fakeId, clientId: fakeClientId, state: fakeState };
     const storageMock = {
@@ -26,10 +26,8 @@ test('LearningSessionService.getSession returns a valid session', async (done) =
     // <-- Check -->
     expect(session).toEqual(new LearningSession(fakeId, fakeClientId, fakeState));
     // </- Check -->
-
-    done();
 });
-test('LearningSessionService.getSessions returns a valid sessions', async (done) => {
+test('LearningSessionService.getSessions returns a valid sessions', async () => {
     // <-- Prepare -->
     const fakeSession = { _id: fakeId, clientId: fakeClientId, state: fakeState };
     const fakeSessions = [fakeSession, fakeSession, fakeSession];
@@ -48,10 +46,8 @@ test('LearningSessionService.getSessions returns a valid sessions', async (done)
     // <-- Check -->
     sessions.forEach(session => expect(session.clientId).toEqual(fakeClientId));
     // </- Check -->
-
-    done();
 });
-test('LearningSessionService.createSession returns a valid session', async (done) => {
+test('LearningSessionService.createSession returns a valid session', async () => {
     // <-- Prepare -->
     const fakeItem = { _id: fakeId, clientId: fakeClientId, state: LearningSessionStates.init };
     const storageMock = {
@@ -69,6 +65,4 @@ test('LearningSessionService.createSession returns a valid session', async (done
     // <-- Check -->
     expect(session).toEqual(new LearningSession(fakeId, fakeClientId));
     // </- Check -->
-
-    done();
 });

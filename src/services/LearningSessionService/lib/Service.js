@@ -21,7 +21,9 @@ module.exports = class Service {
             return [];
         }
 
-        return items.map((item) => new LearningSession(item._id, item.clientId, item.state));
+        return items.map(
+            (item) => new LearningSession(item._id, item.clientId, item.state)
+        );
     }
     async createSession(clientId) {
         const item = await this.storage.insert({
