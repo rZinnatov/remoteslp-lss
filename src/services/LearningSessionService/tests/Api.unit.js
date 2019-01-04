@@ -17,7 +17,7 @@ function createSettingsMock() {
 }
 function createExpressMock(methodMock = () => {}) {
     return {
-        use: () => {},
+        use: methodMock,
         get: methodMock,
         put: methodMock,
         post: methodMock,
@@ -25,7 +25,7 @@ function createExpressMock(methodMock = () => {}) {
         listen: methodMock
     };
 }
-function createServiceMock(methodMock = async () => { return new Promise(resolve => resolve()) }) {
+function createServiceMock(methodMock = async () => new Promise(resolve => resolve())) {
     return {
         getSession: methodMock,
         getSessions: methodMock,
