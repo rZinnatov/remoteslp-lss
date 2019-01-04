@@ -1,17 +1,21 @@
-const createLearningSessionService = require('../index.js');
+const LearningSessionServiceFactory = require('../index.js');
 
 const clientId = 'client-123';
 const anotherClientId = 'another-client-123';
 
 beforeEach(async (done) => {
-    const learningSessionService = createLearningSessionService();
+    const learningSessionService = new LearningSessionServiceFactory()
+        .createNewServiceInstance()
+    ;
     await learningSessionService.removeSessions(clientId);
     await learningSessionService.removeSessions(anotherClientId);
 
     done();
 });
 afterAll(async (done) => {
-    const learningSessionService = createLearningSessionService();
+    const learningSessionService = new LearningSessionServiceFactory()
+        .createNewServiceInstance()
+    ;
     await learningSessionService.removeSessions(clientId);
     await learningSessionService.removeSessions(anotherClientId);
 
@@ -19,7 +23,9 @@ afterAll(async (done) => {
 });
 
 test('LearningSessionService can select newly registered session', async (done) => {
-    const learningSessionService = createLearningSessionService();
+    const learningSessionService = new LearningSessionServiceFactory()
+        .createNewServiceInstance()
+    ;
 
     let registeredSession = undefined;
     let selectedSession = undefined;
@@ -39,7 +45,9 @@ test('LearningSessionService can select newly registered session', async (done) 
     done();
 });
 test('LearningSessionService can select list of sessions of a client', async (done) => {
-    const learningSessionService = createLearningSessionService();
+    const learningSessionService = new LearningSessionServiceFactory()
+        .createNewServiceInstance()
+    ;
 
     await learningSessionService.createSession(clientId);
     await learningSessionService.createSession(clientId);

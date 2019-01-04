@@ -2,18 +2,18 @@ const ObjectID = require('mongodb').ObjectID;
 const MongoClient = require('mongodb').MongoClient;
 
 
-async function _getDb(config) {
+async function _getDb(settings) {
     // TODO: use connection pool
     // cleanup via https://github.com/jtlapp/node-cleanup
     // https://stackoverflow.com/questions/38693792/is-it-necessary-to-open-mongodb-connection-every-time-i-want-to-work-with-the-db
 
     const mongoClient = await MongoClient.connect(
-        config.url,
+        settings.url,
         { useNewUrlParser: true }
     );
     const collection = await mongoClient
-        .db(config.dbName)
-        .collection(config.collectionName)
+        .db(settings.dbName)
+        .collection(settings.collectionName)
     ;
     return {
         collection: collection,
@@ -29,11 +29,11 @@ function _removeUndefinedProperties(object) {
 }
 
 module.exports = class Storage {
-    constructor(config) {
-        this.config = config;
+    constructor(settings) {
+        this.settings = settings;
     }
     async selectById(id) {
-        const db = await _getDb(this.config);
+        const db = await _getDb(this.settings);
         const learningSession = await db.collection.findOne({ _id: new ObjectID(id) });
         db.dispose();
 
@@ -42,14 +42,14 @@ module.exports = class Storage {
     async where(filterObject) {
         _removeUndefinedProperties(filterObject);
 
-        const db = await _getDb(this.config);
+        const db = await _getDb(this.settings);
         const learningSessions = await db.collection.find(filterObject).toArray();
         db.dispose();
 
         return learningSessions;
     }
     async insert(session) {
-        const db = await _getDb(this.config);
+        const db = await _getDb(this.settings);
         const result = await db.collection.insertOne(session);
         db.dispose();
 
@@ -62,20 +62,20 @@ module.exports = class Storage {
     async delete(filterObject) {
         _removeUndefinedProperties(filterObject);
 
-        const db = await _getDb(this.config);
+        const db = await _getDb(this.settings);
         const result = await db.collection.deleteMany(filterObject);
         db.dispose();
 
         return result.deletedCount;
     }
     async deleteAll() {
-        const db = await _getDb(this.config);
+        const db = await _getDb(this.settings);
         const result = await db.collection.drop();
         // TODO: Check what the result exactly is
         db.dispose();
     }
     async deleteById(id) {
-        const db = await _getDb(this.config);
+        const db = await _getDb(this.settings);
         const result = await db.collection.deleteOne({ _id: new ObjectID(id) });
         db.dispose();
 
