@@ -34,7 +34,9 @@ module.exports = class Storage {
     }
     async selectById(id) {
         const db = await _getDb(this.settings);
-        const learningSession = await db.collection.findOne({ _id: new ObjectID(id) });
+        const learningSession = await db.collection.findOne({
+            _id: new ObjectID(id)
+        });
         db.dispose();
 
         return learningSession;
@@ -43,7 +45,10 @@ module.exports = class Storage {
         _removeUndefinedProperties(filterObject);
 
         const db = await _getDb(this.settings);
-        const learningSessions = await db.collection.find(filterObject).toArray();
+        const learningSessions = await db.collection
+            .find(filterObject)
+            .toArray()
+        ;
         db.dispose();
 
         return learningSessions;
@@ -58,6 +63,19 @@ module.exports = class Storage {
         }
 
         return result.ops[0];
+    }
+    async update(id, state) {
+        const db = await _getDb(this.settings);
+        const result = await db.collection.updateOne(
+            {
+                _id: new ObjectID(id)
+            }, {
+                $set: { state: state }
+            }
+        );
+        db.dispose();
+
+        return result.modifiedCount;
     }
     async delete(filterObject) {
         _removeUndefinedProperties(filterObject);

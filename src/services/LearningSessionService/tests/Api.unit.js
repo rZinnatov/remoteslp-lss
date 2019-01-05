@@ -160,23 +160,32 @@ test('LearningSessionService API createSession uses "clientId" body param', asyn
     await learningSessionServiceApi._createSession(requestMock, responseMock);
     // </- Run -->
 });
-test('LearningSessionService API returns 405 on post', () => {
+test('LearningSessionService API updateSession', () => {
     // <-- Prepare -->
+    const requestMock = { body: { id: 'id-123', state: 2 } };
     const responseMock = {
-        statusCode: 0,
-        send: function() {
+        send: function(result) {
             // <-- Check -->
-            expect(this.statusCode).toEqual(405);
+            const expectedResult = { modifiedCount: 1 };
+            expect(result).toEqual(JSON.stringify(expectedResult));
             // </- Check -->
         }
     };
+    const serviceMock = createServiceMock();
+    serviceMock.updateSession = async (id, state) => {
+        // <-- Check -->
+        expect(id).toEqual(requestMock.body.id);
+        expect(state).toEqual(requestMock.body.state);
+        // </- Check -->
+        return new Promise(resolve => resolve(1));
+    };
     const learningSessionServiceApi = new LearningSessionServiceFactory(createSettingsMock())
-        .createNewApiInstance({}, createExpressMock())
+        .createNewApiInstance(serviceMock, createExpressMock())
     ;
     // </- Prepare -->
 
     // <-- Run -->
-    learningSessionServiceApi._updateSession(null, responseMock);
+    learningSessionServiceApi._updateSession(requestMock, responseMock);
     // </- Run -->
 });
 test('LearningSessionService API deleteAllSessions', async () => {

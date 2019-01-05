@@ -1,7 +1,9 @@
 const LearningSessionServiceFactory = require('../index.js');
 
+
 const clientId = 'client-123';
 const anotherClientId = 'another-client-123';
+
 
 beforeEach(async () => {
     const learningSessionService = new LearningSessionServiceFactory()
@@ -19,15 +21,15 @@ afterAll(async () => {
 });
 
 test('LearningSessionService can select newly registered session', async () => {
-    const learningSessionService = new LearningSessionServiceFactory()
-        .createNewServiceInstance()
-    ;
-
     let registeredSession = undefined;
     let selectedSession = undefined;
 
     try
     {
+        const learningSessionService = new LearningSessionServiceFactory()
+            .createNewServiceInstance()
+        ;
+    
         registeredSession = await learningSessionService.createSession(clientId);
         selectedSession = await learningSessionService.getSession(registeredSession.id);
 
@@ -39,18 +41,18 @@ test('LearningSessionService can select newly registered session', async () => {
     expect(selectedSession).toEqual(registeredSession);
 });
 test('LearningSessionService can select list of sessions of a client', async () => {
-    const learningSessionService = new LearningSessionServiceFactory()
-        .createNewServiceInstance()
-    ;
-
-    await learningSessionService.createSession(clientId);
-    await learningSessionService.createSession(clientId);
-    await learningSessionService.createSession(clientId);
-    await learningSessionService.createSession(anotherClientId);
-
     let learningSessions = undefined;
     try
     {
+        const learningSessionService = new LearningSessionServiceFactory()
+            .createNewServiceInstance()
+        ;
+    
+        await learningSessionService.createSession(clientId);
+        await learningSessionService.createSession(clientId);
+        await learningSessionService.createSession(clientId);
+        await learningSessionService.createSession(anotherClientId);
+        
         learningSessions = await learningSessionService.getSessions(clientId);
 
     } catch (error) {
@@ -60,4 +62,33 @@ test('LearningSessionService can select list of sessions of a client', async () 
     
     expect(learningSessions.length).toEqual(3);
     learningSessions.forEach(session => expect(session.clientId).toEqual(clientId));
+});
+test('LearningSessionService can update session', async () => {
+    let session = undefined;
+    let modifiedCount = undefined;
+    let updatedSession = undefined;
+
+    try
+    {
+        const learningSessionService = new LearningSessionServiceFactory()
+            .createNewServiceInstance()
+        ;
+    
+        session = await learningSessionService.createSession(clientId);
+        modifiedCount = await learningSessionService.updateSession(session.id, 1);
+        updatedSession = await learningSessionService.getSession(session.id);
+
+    } catch (error) {
+        console.error(error);
+        expect(error).toBe(undefined);
+    }
+
+    expect(modifiedCount).toEqual(1);
+    expect(session.id).toEqual(updatedSession.id);
+
+    expect(session.state).toEqual(0);
+    expect(session.clientId).toEqual(clientId);
+    
+    expect(updatedSession.state).toEqual(1);
+    expect(updatedSession.clientId).toEqual(clientId);
 });

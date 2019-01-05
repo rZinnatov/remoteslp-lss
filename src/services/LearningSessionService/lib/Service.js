@@ -33,6 +33,9 @@ module.exports = class Service {
 
         return new LearningSession(item._id, item.clientId, item.state);
     }
+    async updateSession(id, state) {
+        return await this.storage.update(id, state);
+    }
     async removeAll() {
         return await this.storage.deleteAll();
     }

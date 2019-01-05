@@ -61,9 +61,17 @@ module.exports = class Api {
             this._processError(error, response);
         }
     }
-    _updateSession(request, response) {
-        response.statusCode = 405; // Method not allowed
-        response.send();
+    async _updateSession(request, response) {
+        try {
+            const modifiedCount = await this._service.updateSession(
+                request.body.id,
+                request.body.state,
+            );
+            response.send(JSON.stringify({ modifiedCount: modifiedCount }));
+
+        } catch(error) {
+            this._processError(error, response);
+        }
     }
     async _deleteAllSessions(request, response) {
         try {
