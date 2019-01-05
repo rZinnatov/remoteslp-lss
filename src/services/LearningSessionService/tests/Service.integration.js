@@ -1,4 +1,5 @@
 const LearningSessionServiceFactory = require('../index.js');
+const LearningSessionStates = require('../../../domain/LearningSessionStates');
 
 
 const clientId = 'client-123';
@@ -75,7 +76,10 @@ test('LearningSessionService can update session', async () => {
         ;
     
         session = await learningSessionService.createSession(clientId);
-        modifiedCount = await learningSessionService.updateSession(session.id, 1);
+        modifiedCount = await learningSessionService.updateSession(
+            session.id,
+            LearningSessionStates.done
+        );
         updatedSession = await learningSessionService.getSession(session.id);
 
     } catch (error) {
@@ -86,9 +90,9 @@ test('LearningSessionService can update session', async () => {
     expect(modifiedCount).toEqual(1);
     expect(session.id).toEqual(updatedSession.id);
 
-    expect(session.state).toEqual(0);
+    expect(session.state).toEqual(LearningSessionStates.init);
     expect(session.clientId).toEqual(clientId);
     
-    expect(updatedSession.state).toEqual(1);
+    expect(updatedSession.state).toEqual(LearningSessionStates.done);
     expect(updatedSession.clientId).toEqual(clientId);
 });

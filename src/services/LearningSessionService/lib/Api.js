@@ -14,7 +14,7 @@ module.exports = class Api {
             next();
         });
 
-        const apiPath = this._settings.apiPath;
+        const apiPath = this._settings.path;
         this._expressApp.get(`${apiPath}/session/:id`, this._getSession.bind(this));
         this._expressApp.get(`${apiPath}/sessions/:clientId`, this._getSessions.bind(this));
         this._expressApp.put(`${apiPath}/session/`, this._createSession.bind(this));
@@ -35,10 +35,19 @@ module.exports = class Api {
     async _getSession(request, response) {
         try {
             const session = await this._service.getSession(request.params.id);
+            if (session == undefined) {
+                this._sendError(
+                    response,
+                    `session with id '${request.params.id}' not found`,
+                    404
+                );
+                return;
+            }
+
             response.send(JSON.stringify(session));
 
         } catch(error) {
-            this._processError(error, response);
+            this._sendError(response, error.message);
         }
     }
     async _getSessions(request, response) {
@@ -47,7 +56,7 @@ module.exports = class Api {
             response.send(JSON.stringify(sessions));
 
         } catch(error) {
-            this._processError(error, response);
+            this._sendError(response, error.message);
         }
     }
     async _createSession(request, response) {
@@ -58,7 +67,7 @@ module.exports = class Api {
             response.send(JSON.stringify(session));
 
         } catch(error) {
-            this._processError(error, response);
+            this._sendError(response, error.message);
         }
     }
     async _updateSession(request, response) {
@@ -70,16 +79,16 @@ module.exports = class Api {
             response.send(JSON.stringify({ modifiedCount: modifiedCount }));
 
         } catch(error) {
-            this._processError(error, response);
+            this._sendError(response, error.message);
         }
     }
     async _deleteAllSessions(request, response) {
         try {
-            const deletedCount = await this._service.removeAll();
+            const deletedCount = await this._service.removeAllSessions();
             response.send(JSON.stringify({ deletedCount: deletedCount }));
 
         } catch(error) {
-            this._processError(error, response);
+            this._sendError(response, error.message);
         }
     }
     async _deleteSession(request, response) {
@@ -88,7 +97,7 @@ module.exports = class Api {
             response.send(JSON.stringify({ deletedCount: deletedCount }));
 
         } catch(error) {
-            this._processError(error, response);
+            this._sendError(response, error.message);
         }
     }
     async _deleteSessions(request, response) {
@@ -97,13 +106,11 @@ module.exports = class Api {
             response.send(JSON.stringify({ deletedCount: deletedCount }));
 
         } catch(error) {
-            this._processError(error, response);
+            this._sendError(response, error.message);
         }
     }
-    _processError(error, response) {
-        // TODO: Log the error
-
-        response.statusCode = 500;
-        response.send(JSON.stringify({ error: error.message }));
+    _sendError(response, message, statusCode=500) {
+        response.statusCode = statusCode;
+        response.send(JSON.stringify({ error: message }));
     }
 };

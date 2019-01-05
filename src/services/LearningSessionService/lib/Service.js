@@ -36,7 +36,7 @@ module.exports = class Service {
     async updateSession(id, state) {
         return await this.storage.update(id, state);
     }
-    async removeAll() {
+    async removeAllSessions() {
         return await this.storage.deleteAll();
     }
     async removeSession(id) {
