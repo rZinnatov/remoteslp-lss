@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const HttpError = require("standard-http-error");
 
 
 module.exports = class Api {
@@ -13,6 +14,7 @@ module.exports = class Api {
             response.setHeader('Content-Type', 'application/json; charset=utf8');
             next();
         });
+        this._expressApp.use(this._sendError);
 
         const apiPath = this._settings.path;
         this._expressApp.get(`${apiPath}/session/:id`, this._getSession.bind(this));
@@ -32,85 +34,82 @@ module.exports = class Api {
     }
 
     
-    async _getSession(request, response) {
+    async _getSession(request, response, next) {
         try {
             const session = await this._service.getSession(request.params.id);
             if (session == undefined) {
-                this._sendError(
-                    response,
-                    `session with id '${request.params.id}' not found`,
-                    404
-                );
-                return;
+                throw new HttpError(HttpError.NOT_FOUND, `session with id '${request.params.id}' not found`);
             }
 
-            response.send(JSON.stringify(session));
+            response.json(session);
 
         } catch(error) {
-            this._sendError(response, error.message);
+            next(error);
         }
     }
-    async _getSessions(request, response) {
+    async _getSessions(request, response, next) {
         try {
             const sessions = await this._service.getSessions(request.params.clientId);
-            response.send(JSON.stringify(sessions));
+            response.json(sessions);
 
         } catch(error) {
-            this._sendError(response, error.message);
+            next(error);
         }
     }
-    async _createSession(request, response) {
+    async _createSession(request, response, next) {
         // TODO: Validate body
         
         try {
             const session = await this._service.createSession(request.body.clientId);
-            response.send(JSON.stringify(session));
+            response.json(session);
 
         } catch(error) {
-            this._sendError(response, error.message);
+            next(error);
         }
     }
-    async _updateSession(request, response) {
+    async _updateSession(request, response, next) {
         try {
             const modifiedCount = await this._service.updateSession(
                 request.body.id,
                 request.body.state,
             );
-            response.send(JSON.stringify({ modifiedCount: modifiedCount }));
+            response.json({ modifiedCount: modifiedCount });
 
         } catch(error) {
-            this._sendError(response, error.message);
+            next(error);
         }
     }
-    async _deleteAllSessions(request, response) {
+    async _deleteAllSessions(request, response, next) {
         try {
             const deletedCount = await this._service.removeAllSessions();
-            response.send(JSON.stringify({ deletedCount: deletedCount }));
+            response.json({ deletedCount: deletedCount });
 
         } catch(error) {
-            this._sendError(response, error.message);
+            next(error);
         }
     }
-    async _deleteSession(request, response) {
+    async _deleteSession(request, response, next) {
         try {
             const deletedCount = await this._service.removeSession(request.params.id);
-            response.send(JSON.stringify({ deletedCount: deletedCount }));
+            response.json({ deletedCount: deletedCount });
 
         } catch(error) {
-            this._sendError(response, error.message);
+            next(error);
         }
     }
-    async _deleteSessions(request, response) {
+    async _deleteSessions(request, response, next) {
         try {
             const deletedCount = await this._service.removeSessions(request.params.clientId);
-            response.send(JSON.stringify({ deletedCount: deletedCount }));
+            response.json({ deletedCount: deletedCount });
 
         } catch(error) {
-            this._sendError(response, error.message);
+            next(error);
         }
     }
-    _sendError(response, message, statusCode=500) {
-        response.statusCode = statusCode;
-        response.send(JSON.stringify({ error: message }));
+    _sendError(error, request, response, next) {
+        response
+            .status(error.code || 500)
+            .json({ error: error.message })
+        ;
     }
 };

@@ -1,3 +1,4 @@
+const HttpError = require("standard-http-error");
 const TestHelper = require('./TestHelper');
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionServiceFactory = require('../index');
@@ -29,13 +30,13 @@ test('LearningSessionService API getSession uses "id" url param', async () => {
     const clientId = 'clientId-123';
     const requestMock = { params: { id: 'id-123' } };
     const responseMock = {
-        send: (session) => {
+        json: (session) => {
             const expectedSession = new LearningSession(
                 requestMock.params.id,
                 clientId
             );
             // <-- Check -->
-            expect(session).toEqual(JSON.stringify(expectedSession));
+            expect(session).toEqual(expectedSession);
             // </- Check -->
         }
     };
@@ -63,13 +64,13 @@ test('LearningSessionService API getSessions uses "clientId" url param', async (
     const id2 = 'id-123-2';
     const requestMock = { params: { clientId: 'clientId-123' } };
     const responseMock = {
-        send: (sessions) => {
+        json: (sessions) => {
             const expectedSessions = [
                 new LearningSession(id1, requestMock.params.clientId),
                 new LearningSession(id2, requestMock.params.clientId),
             ];
             // <-- Check -->
-            expect(sessions).toEqual(JSON.stringify(expectedSessions));
+            expect(sessions).toEqual(expectedSessions);
             // </- Check -->
         }
     };
@@ -100,10 +101,10 @@ test('LearningSessionService API createSession uses "clientId" body param', asyn
     const id = 'id-123';
     const requestMock = { body: { clientId: 'clientId-123' } };
     const responseMock = {
-        send: (session) => {
+        json: (session) => {
             const expectedSession = new LearningSession(id, requestMock.body.clientId);
             // <-- Check -->
-            expect(session).toEqual(JSON.stringify(expectedSession));
+            expect(session).toEqual(expectedSession);
             // </- Check -->
         }
     };
@@ -130,10 +131,10 @@ test('LearningSessionService API updateSession', () => {
     // <-- Prepare -->
     const requestMock = { body: { id: 'id-123', state: 2 } };
     const responseMock = {
-        send: function(result) {
+        json: function(result) {
             // <-- Check -->
             const expectedResult = { modifiedCount: 1 };
-            expect(result).toEqual(JSON.stringify(expectedResult));
+            expect(result).toEqual(expectedResult);
             // </- Check -->
         }
     };
@@ -157,10 +158,10 @@ test('LearningSessionService API updateSession', () => {
 test('LearningSessionService API deleteAllSessions', async () => {
     // <-- Prepare -->
     const responseMock = {
-        send: (result) => {
+        json: (result) => {
             const expectedResult = { deletedCount: 5 };
             // <-- Check -->
-            expect(result).toEqual(JSON.stringify(expectedResult));
+            expect(result).toEqual(expectedResult);
             // </- Check -->
         }
     };
@@ -183,10 +184,10 @@ test('LearningSessionService API deleteSession uses "id" url param', async () =>
     // <-- Prepare -->
     const requestMock = { params: { id: 'id-123' } };
     const responseMock = {
-        send: (result) => {
+        json: (result) => {
             const expectedResult = { deletedCount: 1 };
             // <-- Check -->
-            expect(result).toEqual(JSON.stringify(expectedResult));
+            expect(result).toEqual(expectedResult);
             // </- Check -->
         }
     };
@@ -212,10 +213,10 @@ test('LearningSessionService API deleteSessions uses "clientId" url param', asyn
     // <-- Prepare -->
     const requestMock = { params: { clientId: 'clientId-123' } };
     const responseMock = {
-        send: (result) => {
+        json: (result) => {
             const expectedResult = { deletedCount: 5 };
             // <-- Check -->
-            expect(result).toEqual(JSON.stringify(expectedResult));
+            expect(result).toEqual(expectedResult);
             // </- Check -->
         }
     };
@@ -244,17 +245,14 @@ test('LearningSessionService API catches errors', async () => {
         params: { id: 'id-123', clientId: 'clientId-123' },
         body: { clientId: 'clientId-123' }
     };
-    const responseMock = {
-        statusCode: 0,
-        send: function(error) {
-            // <-- Check -->
-            expect(error).toEqual(JSON.stringify({ error: errorMessage }));
-            expect(this.statusCode).toEqual(500);
-            // </- Check -->
-        }
+    const nextMock = (error) => {
+        // <-- Check -->
+        expect(error.code).toEqual(500);
+        expect(error.message).toEqual(errorMessage);
+        // </- Check -->
     };
     const serviceMock = TestHelper.createServiceMock(async () => {
-        return new Promise(_ => { throw new Error(errorMessage); });
+        return new Promise(_ => { throw new HttpError(500, errorMessage); });
     });
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
         .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
@@ -263,11 +261,11 @@ test('LearningSessionService API catches errors', async () => {
 
     // <-- Run -->
     // TODO: Make separate unit test for each call
-    await api._getSession(requestMock, responseMock);
-    await api._getSessions(requestMock, responseMock);
-    await api._createSession(requestMock, responseMock);
-    await api._deleteAllSessions(requestMock, responseMock);
-    await api._deleteSession(requestMock, responseMock);
-    await api._deleteSessions(requestMock, responseMock);
+    await api._getSession(requestMock, null, nextMock);
+    await api._getSessions(requestMock, null, nextMock);
+    await api._createSession(requestMock, null, nextMock);
+    await api._deleteAllSessions(requestMock, null, nextMock);
+    await api._deleteSession(requestMock, null, nextMock);
+    await api._deleteSessions(requestMock, null, nextMock);
     // </- Run -->
 });
