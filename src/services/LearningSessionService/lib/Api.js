@@ -10,10 +10,6 @@ module.exports = class Api {
 
         this._expressApp = api || express();
         this._expressApp.use(bodyParser.json());
-        this._expressApp.use((request, response, next) => {
-            response.setHeader('Content-Type', 'application/json; charset=utf8');
-            next();
-        });
         this._expressApp.use(this._sendError);
 
         const apiPath = this._settings.path;
