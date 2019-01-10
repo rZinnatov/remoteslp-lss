@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const HttpError = require("standard-http-error");
 
 
+let _stopHttpServer = async () => {};
+
 module.exports = class Api {
     constructor(settings, service, api) {
         this._settings = settings;
@@ -23,13 +25,34 @@ module.exports = class Api {
     }
 
     run() {
-        this._expressApp.listen(
+        const httpServer = this._expressApp.listen(
             this._settings.port,
-            () => console.log(`listening on port ${this._settings.port}`)
+            () => console.log(`RemoteML(${process.pid}): listening on port ${this._settings.port}`)
         );
+        _stopHttpServer = async () => {
+            if (httpServer == undefined) {
+                return;
+            }
+    
+            return new Promise((resolve, reject) => {
+                const httpServerCloseCallback = (error) => {
+                    if (error != undefined) {
+                        reject(error);
+                    }
+
+                    console.log(`RemoteML(${process.pid}): Http server is stopped`);
+                    resolve();
+                };
+                console.log(`RemoteML(${process.pid}): Http server is stopping`);
+                httpServer.close(httpServerCloseCallback);
+            });
+        };
+    }
+    async stop() {
+        await _stopHttpServer();
+        await this._service.stop();
     }
 
-    
     async _getSession(request, response, next) {
         try {
             const session = await this._service.getSession(request.params.id);

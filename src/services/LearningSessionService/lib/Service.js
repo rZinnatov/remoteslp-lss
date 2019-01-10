@@ -4,11 +4,14 @@ const LearningSessionStates = require('../../../domain/LearningSessionStates');
 
 module.exports = class Service {
     constructor(storage) {
-        this.storage = storage;
+        this._storage = storage;
     }
 
+    async stop() {
+        await this._storage.stop();
+    }
     async getSession(id) {
-        const item = await this.storage.selectById(id);
+        const item = await this._storage.selectById(id);
         if (item === null) {
             return null;
         }
@@ -16,7 +19,7 @@ module.exports = class Service {
         return new LearningSession(item._id, item.clientId, item.state);
     }
     async getSessions(clientId) {
-        const items = await this.storage.where({ clientId: clientId });
+        const items = await this._storage.where({ clientId: clientId });
         if (items === null) {
             return [];
         }
@@ -26,7 +29,7 @@ module.exports = class Service {
         );
     }
     async createSession(clientId) {
-        const item = await this.storage.insert({
+        const item = await this._storage.insert({
             clientId: clientId,
             state: LearningSessionStates.init
         });
@@ -34,15 +37,15 @@ module.exports = class Service {
         return new LearningSession(item._id, item.clientId, item.state);
     }
     async updateSession(id, state) {
-        return await this.storage.update(id, state);
+        return await this._storage.update(id, state);
     }
     async removeAllSessions() {
-        return await this.storage.deleteAll();
+        return await this._storage.deleteAll();
     }
     async removeSession(id) {
-        return await this.storage.deleteById(id);
+        return await this._storage.deleteById(id);
     }
     async removeSessions(clientId) {
-        return await this.storage.delete({ clientId: clientId });
+        return await this._storage.delete({ clientId: clientId });
     }
 };
