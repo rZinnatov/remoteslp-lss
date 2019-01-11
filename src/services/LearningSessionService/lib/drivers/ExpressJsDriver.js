@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const isAsyncFunction = require('util').types.isAsyncFunction;
 
 
 module.exports = class ExpressJsDriver {
