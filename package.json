@@ -6,7 +6,7 @@
   "scripts": {
     "test:unit": "jest --testRegex=\".+/tests/.*\\.unit\\.js\" --forceExit --detectOpenHandles",
     "test:integration": "jest --testRegex=\".+/tests/.*\\.integration\\.js\" --forceExit --detectOpenHandles",
-    "start": "node index.js"
+    "start": "node run.js"
   },
   "author": "Roman Zinnatov",
   "license": "MIT",

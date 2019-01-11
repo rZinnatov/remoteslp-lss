@@ -1,5 +1,5 @@
 const TestHelper = require('./TestHelper');
-const LearningSession = require('../../../domain/LearningSession');
+const LearningSession = require('../lib/domain/LearningSession');
 const LearningSessionServiceFactory = require('../index');
 
 

@@ -83,5 +83,4 @@ typings/
 .vscode/
 
 # custom
-creds/
-src/services/**/settings.json
+settings.json

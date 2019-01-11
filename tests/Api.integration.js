@@ -2,8 +2,8 @@ const express = require('express');
 const request = require('supertest');
 
 const TestHelper = require('./TestHelper');
-const LearningSession = require('../../../domain/LearningSession');
-const LearningSessionStates = require('../../../domain/LearningSessionStates');
+const LearningSession = require('../lib/domain/LearningSession');
+const LearningSessionStates = require('../lib/domain/LearningSessionStates');
 const LearningSessionServiceFactory = require('../index');
 
 
