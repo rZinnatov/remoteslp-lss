@@ -15,7 +15,11 @@ test('LearningSessionService API listen on specified port', () => {
         // </- Check -->
     };
 
-    const api = new LearningSessionServiceFactory(settingsMock)
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: settingsMock
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(TestHelper.createServiceMock(), null, expressMock)
     ;
     // </- Prepare -->
@@ -48,7 +52,11 @@ test('LearningSessionService API getSession uses "id" url param', async () => {
         return new Promise(resolve => resolve(new LearningSession(requestMock.params.id, clientId)));
     };
     
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
@@ -86,7 +94,11 @@ test('LearningSessionService API getSessions uses "clientId" url param', async (
         return new Promise(resolve => resolve(sessions));
     };
     
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
@@ -117,7 +129,11 @@ test('LearningSessionService API createSession uses "clientId" body param', asyn
         return new Promise(resolve => resolve(session));
     };
     
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
@@ -145,7 +161,12 @@ test('LearningSessionService API updateSession', () => {
         // </- Check -->
         return new Promise(resolve => resolve(1));
     };
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
+
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
@@ -170,7 +191,11 @@ test('LearningSessionService API deleteAllSessions', async () => {
         return new Promise(resolve => resolve(5));
     };
     
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
@@ -199,7 +224,11 @@ test('LearningSessionService API deleteSession uses "id" url param', async () =>
         return new Promise(resolve => resolve(1));
     };
     
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
@@ -228,7 +257,11 @@ test('LearningSessionService API deleteSessions uses "clientId" url param', asyn
         return new Promise(resolve => resolve(5));
     };
     
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
@@ -242,7 +275,10 @@ test('LearningSessionService API does not catches errors while stopping', async 
     learningSessionServiceMock.stop = () =>
         new Promise(_ => { throw new Error(); })
     ;
-    const api = new LearningSessionServiceFactory()
+    const factoryOptions = {
+        logger: TestHelper.createLoggerMock()
+    };
+    const api = new LearningSessionServiceFactory(factoryOptions)
         .createNewApiInstance(learningSessionServiceMock)
     ;
 

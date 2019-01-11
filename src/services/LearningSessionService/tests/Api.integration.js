@@ -1,5 +1,6 @@
 const express = require('express');
 const request = require('supertest');
+
 const TestHelper = require('./TestHelper');
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionStates = require('../../../domain/LearningSessionStates');
@@ -13,7 +14,7 @@ let learningSessionService;
 const clientId = 'clientId-123';
 const anotherClientId = 'anotherClientId-123';
 beforeAll(async () => {
-    const factory = new LearningSessionServiceFactory();
+    const factory = new LearningSessionServiceFactory({ logger: TestHelper.createLoggerMock() });
     apiPath = factory.settings.api.path;
 
     learningSessionService = factory.createNewServiceInstance();
@@ -256,7 +257,7 @@ test(`LearningSessionService API DELETE /sessions deletes all sessions of a clie
     // </- Delete Session -->
 });
 test(`LearningSessionService API catches all error`, async () => {
-    const factory = new LearningSessionServiceFactory();
+    const factory = new LearningSessionServiceFactory({ logger: TestHelper.createLoggerMock() });
     apiPath = factory.settings.api.path;
 
     const errorMessage = 'errorMessage';

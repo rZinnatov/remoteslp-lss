@@ -1,3 +1,4 @@
+const util = require('./util');
 const Api = require('./Api');
 const Storage = require('./Storage');
 const Service = require('./Service');
@@ -5,15 +6,17 @@ const MongoDbDriver = require('./drivers/MongoDbDriver');
 const ExpressJsDriver = require('./drivers/ExpressJsDriver');
 
 module.exports = class Factory {
-    constructor(settings) {
-        this.settings = settings || require('../settings.json');
+    constructor(options = {}) {
+        this.settings = options.settings || require('../settings.json');
         // TODO: Verify the settings object
+
+        this.logger = options.logger || util.logger;
     }
 
     createNewApiInstance(service, apiDriver, app) {
         return new Api(
             service || this.createNewServiceInstance(),
-            apiDriver || new ExpressJsDriver(this.settings.api, app)
+            apiDriver || new ExpressJsDriver(this.settings.api, this.logger, app)
         );
     }
     createNewServiceInstance(storage) {
@@ -23,7 +26,7 @@ module.exports = class Factory {
     }
     createNewStorageInstance(dbDriver) {
         return new Storage(
-            dbDriver || new MongoDbDriver(this.settings.storage)
+            dbDriver || new MongoDbDriver(this.settings.storage, this.logger)
         );
     }
 };

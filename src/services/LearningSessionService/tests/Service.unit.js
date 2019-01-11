@@ -1,3 +1,4 @@
+const TestHelper = require('./TestHelper');
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionStates = require('../../../domain/LearningSessionStates');
 const LearningSessionServiceFactory = require('../index.js');
@@ -6,7 +7,10 @@ const LearningSessionServiceFactory = require('../index.js');
 const fakeId = 'fakeId-123';
 const fakeClientId = 'fakeClientId-123';
 const fakeState = 123;
-
+const factoryOptions = {
+    logger: TestHelper.createLoggerMock(),
+    settings: {}
+};
 
 test('LearningSessionService.getSession returns a valid session', async () => {
     // <-- Prepare -->
@@ -14,7 +18,7 @@ test('LearningSessionService.getSession returns a valid session', async () => {
     const storageMock = {
         selectById: () => new Promise(resolve => resolve(fakeSession))
     };
-    const learningSessionService = new LearningSessionServiceFactory({})
+    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance(storageMock)
     ;
     // </- Prepare -->
@@ -34,7 +38,7 @@ test('LearningSessionService.getSessions returns a valid sessions', async () => 
     const storageMock = {
         where: () => new Promise(resolve => resolve(fakeSessions))
     };
-    const learningSessionService = new LearningSessionServiceFactory({})
+    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance(storageMock)
     ;
     // </- Prepare -->
@@ -53,7 +57,7 @@ test('LearningSessionService.createSession returns a valid session', async () =>
     const storageMock = {
         insert: () => new Promise(resolve => resolve(fakeItem))
     };
-    const learningSessionService = new LearningSessionServiceFactory({})
+    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance(storageMock)
     ;
     // </- Prepare -->

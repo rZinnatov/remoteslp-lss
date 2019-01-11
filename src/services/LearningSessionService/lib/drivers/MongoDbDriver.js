@@ -1,16 +1,17 @@
 const MongoClient = require('mongodb').MongoClient;
 
+
 module.exports = class MongoDbDriver {
-    constructor(settings) {
+    constructor(settings, logger) {
         this._settings = settings;
+        this._logger = logger;
         
         this._mongoClient = undefined;
         this._sessionsCollection = undefined;
     }
 
     get isConnected() {
-        return
-            this._mongoClient != undefined &&
+        return this._mongoClient != undefined &&
             this._mongoClient.isConnected()
         ;
     }
@@ -20,9 +21,9 @@ module.exports = class MongoDbDriver {
             return;
         }
     
-        console.log(`RemoteML(${process.pid}): DB driver is closing`);
+        this._logger.info('DB driver is closing');
         await this._mongoClient.close();
-        console.log(`RemoteML(${process.pid}): DB driver is closed`);
+        this._logger.info('DB driver is closed');
     }
     async getSessions() {
         if (
@@ -41,7 +42,7 @@ module.exports = class MongoDbDriver {
     }
 
     async _connect() {
-        console.log(`RemoteML(${process.pid}): connect to db`);
+        this._logger.info('Connect to db');
     
         this._mongoClient = await MongoClient.connect(
             this._settings.url,

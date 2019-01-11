@@ -1,6 +1,7 @@
-module.exports = {
-    removeUndefinedProperties: removeUndefinedProperties,
-    registerProcessEventHandlers: registerProcessEventHandlers
+const logger = {
+    info: function (message) { console.log(this.format(message)); },
+    error: function (message) { console.error(this.format(message)); },
+    format: (message) => `RemoteML(${process.pid}): ${message}`
 };
 
 function removeUndefinedProperties(object) {
@@ -13,30 +14,30 @@ function removeUndefinedProperties(object) {
 function registerProcessEventHandlers(api) {
     async function stopService() {
         try {
-            console.log(`RemoteML(${process.pid}): LearningSessionService is stopping`);
+            logger.info('LearningSessionService is stopping');
             await api.stop();
-            console.log(`RemoteML(${process.pid}): LearningSessionService is stopped`);
+            logger.info('LearningSessionService is stopped');
             process.exit(0);
             
         } catch(error) {
-            console.error(`RemoteML(${process.pid}): Error while stopping the service: '${error}'`);
+            logger.error(`Error while stopping the service: '${error}'`);
             process.exit(1);
         }
     };
     async function signalHandler(signal) {
-        console.log(`RemoteML(${process.pid}): Signal '${signal}' is caught`);
+        logger.info(`Signal '${signal}' is caught`);
         await stopService();
     }
     async function uncaughtExceptionHandler(error) {
-        console.error(`RemoteML(${process.pid}): Unhandled exception: ${error}`);
+        logger.error(`Unhandled exception: ${error}`);
         await stopService();
     }
     async function unhandledRejectionHandler(reason, p) {
-        console.error(`RemoteML(${process.pid}): Unhandled rejection at: '${p}' with reason '${reason}'`);
+        logger.error(`Unhandled rejection at: '${p}' with reason '${reason}'`);
         await stopService();
     }
     
-    process.on('exit', (code) => console.log(`RemoteML(${process.pid}): Exit process with code '${code}'`));
+    process.on('exit', (code) => logger.info(`Exit process with code '${code}'`));
     process.on('SIGINT', signalHandler);
     process.on('SIGTERM', signalHandler);
     process.on('SIGHUP', signalHandler);
@@ -44,3 +45,10 @@ function registerProcessEventHandlers(api) {
     process.on('uncaughtException', uncaughtExceptionHandler);
     process.on('unhandledRejection', unhandledRejectionHandler);
 }
+
+
+module.exports = {
+    logger: logger,
+    removeUndefinedProperties: removeUndefinedProperties,
+    registerProcessEventHandlers: registerProcessEventHandlers
+};

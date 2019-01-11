@@ -3,8 +3,9 @@ const bodyParser = require('body-parser');
 
 
 module.exports = class ExpressJsDriver {
-    constructor(settings, app) {
+    constructor(settings, logger, app) {
         this._settings = settings;
+        this._logger = logger;
         this._httpServer = undefined;
 
         this._app = app || express();
@@ -25,10 +26,10 @@ module.exports = class ExpressJsDriver {
     }
     
     run() {
-        this._app.use(this._sendError);
+        this._app.use(this._sendError.bind(this));
         this._httpServer = this._app.listen(
             this._settings.port,
-            () => console.log(`RemoteML(${process.pid}): listening on port ${this._settings.port}`)
+            () => this._logger.info(`listening on port ${this._settings.port}`)
         );
     }
     async stop() {
@@ -41,16 +42,17 @@ module.exports = class ExpressJsDriver {
                 reject(error);
             }
 
-            console.log(`RemoteML(${process.pid}): Http server is stopped`);
+            this._logger.info('Http server is stopped');
             resolve();
         };
         return new Promise((resolve, reject) => {
-            console.log(`RemoteML(${process.pid}): Http server is stopping`);
+            this._logger.info('Http server is stopping');
             this._httpServer.close(error => httpServerCloseCallback(error, resolve, reject));
         });
     };
 
     _sendError(error, request, response, next) {
+        this._logger.error(error);
         response
             .status(error.code || 500)
             .json({ error: error.message })

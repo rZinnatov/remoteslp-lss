@@ -1,20 +1,23 @@
-const LearningSessionServiceFactory = require('../index.js');
+const TestHelper = require('./TestHelper');
 const LearningSessionStates = require('../../../domain/LearningSessionStates');
+const LearningSessionServiceFactory = require('../index.js');
 
 
 const clientId = 'client-123';
 const anotherClientId = 'another-client-123';
-
+const factoryOptions = {
+    logger: TestHelper.createLoggerMock()
+};
 
 beforeEach(async () => {
-    const learningSessionService = new LearningSessionServiceFactory()
+    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance()
     ;
     await learningSessionService.removeSessions(clientId);
     await learningSessionService.removeSessions(anotherClientId);
 });
 afterAll(async () => {
-    const learningSessionService = new LearningSessionServiceFactory()
+    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance()
     ;
     await learningSessionService.removeSessions(clientId);
@@ -27,7 +30,7 @@ test('LearningSessionService can select newly registered session', async () => {
 
     try
     {
-        const learningSessionService = new LearningSessionServiceFactory()
+        const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
             .createNewServiceInstance()
         ;
     
@@ -35,7 +38,6 @@ test('LearningSessionService can select newly registered session', async () => {
         selectedSession = await learningSessionService.getSession(registeredSession.id);
 
     } catch (error) {
-        console.error(error);
         expect(error).toBe(undefined);
     }
 
@@ -45,7 +47,7 @@ test('LearningSessionService can select list of sessions of a client', async () 
     let learningSessions = undefined;
     try
     {
-        const learningSessionService = new LearningSessionServiceFactory()
+        const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
             .createNewServiceInstance()
         ;
     
@@ -57,7 +59,6 @@ test('LearningSessionService can select list of sessions of a client', async () 
         learningSessions = await learningSessionService.getSessions(clientId);
 
     } catch (error) {
-        console.error(error);
         expect(error).toBe(undefined);
     }
     
@@ -71,7 +72,7 @@ test('LearningSessionService can update session', async () => {
 
     try
     {
-        const learningSessionService = new LearningSessionServiceFactory()
+        const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
             .createNewServiceInstance()
         ;
     
@@ -83,7 +84,6 @@ test('LearningSessionService can update session', async () => {
         updatedSession = await learningSessionService.getSession(session.id);
 
     } catch (error) {
-        console.error(error);
         expect(error).toBe(undefined);
     }
 
