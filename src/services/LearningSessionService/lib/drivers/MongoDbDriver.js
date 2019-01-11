@@ -2,9 +2,9 @@ const MongoClient = require('mongodb').MongoClient;
 
 
 module.exports = class MongoDbDriver {
-    constructor(settings, logger) {
-        this._settings = settings;
-        this._logger = logger;
+    constructor(options) {
+        this._logger = options.logger;
+        this._settings = options.settings;
         
         this._mongoClient = undefined;
         this._sessionsCollection = undefined;

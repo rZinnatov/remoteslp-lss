@@ -3,12 +3,12 @@ const bodyParser = require('body-parser');
 
 
 module.exports = class ExpressJsDriver {
-    constructor(settings, logger, app) {
-        this._settings = settings;
-        this._logger = logger;
+    constructor(options) {
+        this._logger = options.logger;
+        this._settings = options.settings;
         this._httpServer = undefined;
 
-        this._app = app || express();
+        this._app = options.expressJsApp || express();
         this._app.use(bodyParser.json());
     }
 

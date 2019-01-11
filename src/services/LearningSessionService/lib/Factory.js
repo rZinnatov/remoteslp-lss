@@ -13,20 +13,26 @@ module.exports = class Factory {
         this.logger = options.logger || util.logger;
     }
 
-    createNewApiInstance(service, apiDriver, app) {
+    createNewApiInstance(options = {}) {
+        const expressJsDriverOptions = {
+            logger: this.logger,
+            settings: this.settings.api,
+            expressJsApp: options.expressJsApp
+        };
+
         return new Api(
-            service || this.createNewServiceInstance(),
-            apiDriver || new ExpressJsDriver(this.settings.api, this.logger, app)
+            options.service || this.createNewServiceInstance(),
+            options.apiDriver || new ExpressJsDriver(expressJsDriverOptions)
         );
     }
     createNewServiceInstance(storage) {
-        return new Service(
-            storage || this.createNewStorageInstance()
-        );
+        return new Service(storage || this.createNewStorageInstance());
     }
     createNewStorageInstance(dbDriver) {
-        return new Storage(
-            dbDriver || new MongoDbDriver(this.settings.storage, this.logger)
-        );
+        const mongoDbDriverOptions = {
+            logger: this.logger,
+            settings: this.settings.storage
+        };
+        return new Storage(dbDriver || new MongoDbDriver(mongoDbDriverOptions));
     }
 };

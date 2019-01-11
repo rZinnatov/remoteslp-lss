@@ -20,7 +20,10 @@ test('LearningSessionService API listen on specified port', () => {
         settings: settingsMock
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(TestHelper.createServiceMock(), null, expressMock)
+        .createNewApiInstance({
+            service: TestHelper.createServiceMock(),
+            expressJsApp: expressMock
+        })
     ;
     // </- Prepare -->
 
@@ -57,7 +60,10 @@ test('LearningSessionService API getSession uses "id" url param', async () => {
         settings: TestHelper.createSettingsMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
+        .createNewApiInstance({
+            service: serviceMock,
+            expressJsApp: TestHelper.createExpressMock()
+        })
     ;
     // </- Prepare -->
 
@@ -99,7 +105,10 @@ test('LearningSessionService API getSessions uses "clientId" url param', async (
         settings: TestHelper.createSettingsMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
+        .createNewApiInstance({
+            service: serviceMock,
+            expressJsApp: TestHelper.createExpressMock()
+        })
     ;
     // </- Prepare -->
 
@@ -134,7 +143,10 @@ test('LearningSessionService API createSession uses "clientId" body param', asyn
         settings: TestHelper.createSettingsMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
+        .createNewApiInstance({
+            service: serviceMock,
+            expressJsApp: TestHelper.createExpressMock()
+        })
     ;
     // </- Prepare -->
 
@@ -167,7 +179,10 @@ test('LearningSessionService API updateSession', () => {
         settings: TestHelper.createSettingsMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
+        .createNewApiInstance({
+            service: serviceMock,
+            expressJsApp: TestHelper.createExpressMock()
+        })
     ;
     // </- Prepare -->
 
@@ -196,7 +211,10 @@ test('LearningSessionService API deleteAllSessions', async () => {
         settings: TestHelper.createSettingsMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
+        .createNewApiInstance({
+            service: serviceMock,
+            expressJsApp: TestHelper.createExpressMock()
+        })
     ;
     // </- Prepare -->
 
@@ -229,7 +247,10 @@ test('LearningSessionService API deleteSession uses "id" url param', async () =>
         settings: TestHelper.createSettingsMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
+        .createNewApiInstance({
+            service: serviceMock,
+            expressJsApp: TestHelper.createExpressMock()
+        })
     ;
     // </- Prepare -->
 
@@ -262,7 +283,10 @@ test('LearningSessionService API deleteSessions uses "clientId" url param', asyn
         settings: TestHelper.createSettingsMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
+        .createNewApiInstance({
+            service: serviceMock,
+            expressJsApp: TestHelper.createExpressMock()
+        })
     ;
     // </- Prepare -->
 
@@ -279,7 +303,7 @@ test('LearningSessionService API does not catches errors while stopping', async 
         logger: TestHelper.createLoggerMock()
     };
     const api = new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance(learningSessionServiceMock)
+        .createNewApiInstance({ service: learningSessionServiceMock })
     ;
 
     await expect(api.stop()).rejects.toThrow();
