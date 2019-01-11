@@ -1,6 +1,7 @@
 const Api = require('./Api');
 const Storage = require('./Storage');
 const Service = require('./Service');
+const MongoDbDriver = require('./drivers/MongoDbDriver');
 const ExpressJsDriver = require('./drivers/ExpressJsDriver');
 
 module.exports = class Factory {
@@ -20,7 +21,9 @@ module.exports = class Factory {
             storage || this.createNewStorageInstance()
         );
     }
-    createNewStorageInstance(storageSettings) {
-        return new Storage(storageSettings || this.settings.storage);
+    createNewStorageInstance(dbDriver) {
+        return new Storage(
+            dbDriver || new MongoDbDriver(this.settings.storage)
+        );
     }
 };

@@ -1,38 +1,6 @@
 const ObjectID = require('mongodb').ObjectID;
-const MongoClient = require('mongodb').MongoClient;
 
 
-let _mongoClient;
-let _sessionsCollection;
-async function _stopMongoDbDriver() {
-    if (_mongoClient == undefined) {
-        return;
-    }
-
-    console.log(`RemoteML(${process.pid}): DB driver is closing`);
-    await _mongoClient.close();
-    console.log(`RemoteML(${process.pid}): DB driver is closed`);
-}
-async function _getSessions(settings) {
-    if (
-        _mongoClient != undefined && _mongoClient.isConnected() &&
-        _sessionsCollection != undefined
-    ) {
-        return _sessionsCollection;
-    }
-
-    console.log(`RemoteML(${process.pid}): connect to db`);
-
-    _mongoClient = await MongoClient.connect(
-        settings.url,
-        { useNewUrlParser: true }
-    );
-
-    return _sessionsCollection = await _mongoClient
-        .db(settings.dbName)
-        .collection(settings.collectionName)
-    ;
-}
 function _removeUndefinedProperties(object) {
     for (const key in object) {
         if (object[key] === undefined) {
@@ -42,15 +10,15 @@ function _removeUndefinedProperties(object) {
 }
 
 module.exports = class Storage {
-    constructor(settings) {
-        this.settings = settings;
+    constructor(dbDriver) {
+        this._dbDriver = dbDriver;
     }
     
     async stop() {
         await _stopMongoDbDriver();
     }
     async selectById(id) {
-        const sessions = await _getSessions(this.settings);
+        const sessions = await this._dbDriver.getSessions();
         const learningSession = await sessions.findOne({
             _id: new ObjectID(id)
         });
@@ -60,7 +28,7 @@ module.exports = class Storage {
     async where(filterObject) {
         _removeUndefinedProperties(filterObject);
 
-        const sessions = await _getSessions(this.settings);
+        const sessions = await this._dbDriver.getSessions();
         const learningSessions = await sessions
             .find(filterObject)
             .toArray()
@@ -69,7 +37,7 @@ module.exports = class Storage {
         return learningSessions;
     }
     async insert(session) {
-        const sessions = await _getSessions(this.settings);
+        const sessions = await this._dbDriver.getSessions();
         const result = await sessions.insertOne(session);
 
         if (result.insertedCount === 0) {
@@ -79,7 +47,7 @@ module.exports = class Storage {
         return result.ops[0];
     }
     async update(id, state) {
-        const sessions = await _getSessions(this.settings);
+        const sessions = await this._dbDriver.getSessions();
         const result = await sessions.updateOne(
             {
                 _id: new ObjectID(id)
@@ -93,20 +61,22 @@ module.exports = class Storage {
     async delete(filterObject) {
         _removeUndefinedProperties(filterObject);
 
-        const sessions = await _getSessions(this.settings);
+        const sessions = await this._dbDriver.getSessions();
         const result = await sessions.deleteMany(filterObject);
 
         return result.deletedCount;
     }
     async deleteAll() {
-        const sessions = await _getSessions(this.settings);
+        const sessions = await this._dbDriver.getSessions();
         const result = await sessions.deleteMany();
 
         return result.deletedCount;
     }
     async deleteById(id) {
-        const sessions = await _getSessions(this.settings);
-        const result = await sessions.deleteOne({ _id: new ObjectID(id) });
+        const sessions = await this._dbDriver.getSessions();
+        const result = await sessions.deleteOne({
+            _id: new ObjectID(id)
+        });
 
         return result.deletedCount;
     }
