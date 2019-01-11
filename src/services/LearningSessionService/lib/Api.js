@@ -19,8 +19,13 @@ module.exports = class Api {
         this._apiDriver.run();
     }
     async stop() {
-        await this._apiDriver.stop();
-        await this._service.stop();
+        try {
+            await this._apiDriver.stop();
+            await this._service.stop();
+            
+        } catch(error) {
+            console.error(`RemoteML(${process.pid}): Error while stopping the API: '${error}'`);
+        }
     }
 
     async _getSession(request, response) {
@@ -37,7 +42,7 @@ module.exports = class Api {
     }
     async _createSession(request, response) {
         // TODO: Validate body
-        
+
         const session = await this._service.createSession(request.body.clientId);
         response.json(session);
     }

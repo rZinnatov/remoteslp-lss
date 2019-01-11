@@ -260,11 +260,11 @@ test(`LearningSessionService API catches all error`, async () => {
     apiPath = factory.settings.api.path;
 
     const errorMessage = 'errorMessage';
-    learningSessionServiceMock = TestHelper.createServiceMock(
+    const learningSessionServiceMock = TestHelper.createServiceMock(
         () => new Promise(_ => { throw new Error(errorMessage); })
     );
 
-    expressApp = express();
+    const expressApp = express();
     const api = factory.createNewApiInstance(
         learningSessionServiceMock,
         null,
