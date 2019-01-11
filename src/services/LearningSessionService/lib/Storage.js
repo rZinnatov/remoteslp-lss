@@ -1,13 +1,6 @@
 const ObjectID = require('mongodb').ObjectID;
+const removeUndefinedProperties = require('./util').removeUndefinedProperties;
 
-
-function _removeUndefinedProperties(object) {
-    for (const key in object) {
-        if (object[key] === undefined) {
-            delete object[key];
-        }
-    }
-}
 
 module.exports = class Storage {
     constructor(dbDriver) {
@@ -26,7 +19,7 @@ module.exports = class Storage {
         return learningSession;
     }
     async where(filterObject) {
-        _removeUndefinedProperties(filterObject);
+        removeUndefinedProperties(filterObject);
 
         const sessions = await this._dbDriver.getSessions();
         const learningSessions = await sessions
@@ -59,7 +52,7 @@ module.exports = class Storage {
         return result.modifiedCount;
     }
     async delete(filterObject) {
-        _removeUndefinedProperties(filterObject);
+        removeUndefinedProperties(filterObject);
 
         const sessions = await this._dbDriver.getSessions();
         const result = await sessions.deleteMany(filterObject);

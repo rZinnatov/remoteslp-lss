@@ -1,3 +1,15 @@
+module.exports = {
+    removeUndefinedProperties: removeUndefinedProperties,
+    registerProcessEventHandlers: registerProcessEventHandlers
+};
+
+function removeUndefinedProperties(object) {
+    for (const key in object) {
+        if (object[key] === undefined) {
+            delete object[key];
+        }
+    }
+}
 function registerProcessEventHandlers(api) {
     async function stopService() {
         try {
@@ -32,5 +44,3 @@ function registerProcessEventHandlers(api) {
     process.on('uncaughtException', uncaughtExceptionHandler);
     process.on('unhandledRejection', unhandledRejectionHandler);
 }
-
-module.exports = registerProcessEventHandlers;
