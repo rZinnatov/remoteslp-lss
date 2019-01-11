@@ -1,11 +1,13 @@
 {
     "api": {
         "port": 0,
-        "path": ""
+        "path": "",
+        "_comment": "send requests to 'domain.com:<port>/<path>/...'"
     },
     "storage": {
-        "url": "",
-        "dbName": "",
-        "collectionName": ""
+        "url": "mongo url",
+        "dbName": "mongo db name",
+        "collectionName": "mongo collection name",
+        "_comment": "where session are stored"
     }
 }
