@@ -1,7 +1,7 @@
 {
-  "name": "remote-ml",
+  "name": "remoteml-lss",
   "version": "0.0.1",
-  "description": "SaaS for remote learning from your data",
+  "description": "Learning session service for RemoteML project",
   "main": "index.js",
   "scripts": {
     "test": "npm run test:unit && npm run test:integration",
@@ -9,7 +9,7 @@
     "test:integration": "jest --testRegex=\".+/tests/.*\\.integration\\.js\" --forceExit --detectOpenHandles",
     "start": "node run.js"
   },
-  "author": "Roman Zinnatov",
+  "author": "Roman Zinnatov <roman.zinnatov@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.3",
