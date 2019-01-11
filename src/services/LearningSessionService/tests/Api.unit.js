@@ -1,4 +1,3 @@
-const HttpError = require("standard-http-error");
 const TestHelper = require('./TestHelper');
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionServiceFactory = require('../index');
