@@ -17,7 +17,7 @@ test('LearningSessionService API listen on specified port', () => {
     };
 
     const api = new LearningSessionServiceFactory(settingsMock)
-        .createNewApiInstance(TestHelper.createServiceMock(), expressMock)
+        .createNewApiInstance(TestHelper.createServiceMock(), null, expressMock)
     ;
     // </- Prepare -->
 
@@ -50,7 +50,7 @@ test('LearningSessionService API getSession uses "id" url param', async () => {
     };
     
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
+        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
 
@@ -88,7 +88,7 @@ test('LearningSessionService API getSessions uses "clientId" url param', async (
     };
     
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
+        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
 
@@ -119,7 +119,7 @@ test('LearningSessionService API createSession uses "clientId" body param', asyn
     };
     
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
+        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
 
@@ -147,7 +147,7 @@ test('LearningSessionService API updateSession', () => {
         return new Promise(resolve => resolve(1));
     };
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
+        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
 
@@ -172,7 +172,7 @@ test('LearningSessionService API deleteAllSessions', async () => {
     };
     
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
+        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
 
@@ -201,7 +201,7 @@ test('LearningSessionService API deleteSession uses "id" url param', async () =>
     };
     
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
+        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
 
@@ -230,42 +230,11 @@ test('LearningSessionService API deleteSessions uses "clientId" url param', asyn
     };
     
     const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
+        .createNewApiInstance(serviceMock, null, TestHelper.createExpressMock())
     ;
     // </- Prepare -->
 
     // <-- Run -->
     await api._deleteSessions(requestMock, responseMock);
-    // </- Run -->
-});
-test('LearningSessionService API catches errors', async () => {
-    // <-- Prepare -->
-    const errorMessage = 'errorMessage';
-    const requestMock = {
-        params: { id: 'id-123', clientId: 'clientId-123' },
-        body: { clientId: 'clientId-123' }
-    };
-    const nextMock = (error) => {
-        // <-- Check -->
-        expect(error.code).toEqual(500);
-        expect(error.message).toEqual(errorMessage);
-        // </- Check -->
-    };
-    const serviceMock = TestHelper.createServiceMock(async () => {
-        return new Promise(_ => { throw new HttpError(500, errorMessage); });
-    });
-    const api = new LearningSessionServiceFactory(TestHelper.createSettingsMock())
-        .createNewApiInstance(serviceMock, TestHelper.createExpressMock())
-    ;
-    // </- Prepare -->
-
-    // <-- Run -->
-    // TODO: Make separate unit test for each call
-    await api._getSession(requestMock, null, nextMock);
-    await api._getSessions(requestMock, null, nextMock);
-    await api._createSession(requestMock, null, nextMock);
-    await api._deleteAllSessions(requestMock, null, nextMock);
-    await api._deleteSession(requestMock, null, nextMock);
-    await api._deleteSessions(requestMock, null, nextMock);
     // </- Run -->
 });

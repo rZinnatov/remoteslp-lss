@@ -1,5 +1,6 @@
 const express = require('express');
 const request = require('supertest');
+const TestHelper = require('./TestHelper');
 const LearningSession = require('../../../domain/LearningSession');
 const LearningSessionStates = require('../../../domain/LearningSessionStates');
 const LearningSessionServiceFactory = require('../index');
@@ -22,6 +23,7 @@ beforeAll(async () => {
     expressApp = express();
     factory.createNewApiInstance(
         learningSessionService,
+        null,
         expressApp
     );
 });
@@ -252,4 +254,48 @@ test(`LearningSessionService API DELETE /sessions deletes all sessions of a clie
 
     expect(doubleDeleteResponse.body).toEqual({ deletedCount: 1 });
     // </- Delete Session -->
+});
+test(`LearningSessionService API catches all error`, async () => {
+    const factory = new LearningSessionServiceFactory();
+    apiPath = factory.settings.api.path;
+
+    const errorMessage = 'errorMessage';
+    learningSessionServiceMock = TestHelper.createServiceMock(
+        () => new Promise(_ => { throw new Error(errorMessage); })
+    );
+
+    expressApp = express();
+    const api = factory.createNewApiInstance(
+        learningSessionServiceMock,
+        null,
+        expressApp
+    );
+
+    // <-- FUCKING HACK -->
+    // It is needed to call api.run() to set custom error handler
+    // But it is not needed to express to actually start listening
+    const originalListenMethod = expressApp.listen;
+    expressApp.listen = () => {};
+    api.run();
+    expressApp.listen = originalListenMethod;
+    // </- FUCKING HACK -->
+
+    const requests = [
+        request(expressApp).get(`${apiPath}/session/${sessionId}`),
+        request(expressApp).get(`${apiPath}/sessions/${clientId}`),
+        request(expressApp).put(`${apiPath}/session`),
+        request(expressApp).post(`${apiPath}/session`),
+        request(expressApp).delete(`${apiPath}/sessions`),
+        request(expressApp).delete(`${apiPath}/session/${sessionId}`),
+        request(expressApp).delete(`${apiPath}/sessions/${clientId}`)
+    ];
+
+    requests.forEach(async (request) => {
+        const response = await request
+            .expect(500)
+            .expect('Content-Type', /json/)
+            .expect('Content-Type', /utf-8/)
+        ;
+        expect(response.body).toEqual({ error: errorMessage });
+    });
 });

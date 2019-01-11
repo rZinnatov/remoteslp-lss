@@ -22,11 +22,22 @@ module.exports = {
             listen: methodMock
         };
     },
-    createServiceMock: (methodMock = async () => new Promise(resolve => resolve())) => {
+    createApiDriverMock: (methodMock = () => {}) => {
+        return {
+            get: methodMock,
+            put: methodMock,
+            post: methodMock,
+            delete: methodMock,
+            run: methodMock,
+            stop: methodMock
+        };
+    },
+    createServiceMock: (methodMock = () => new Promise(resolve => resolve())) => {
         return {
             getSession: methodMock,
             getSessions: methodMock,
             createSession: methodMock,
+            updateSession: methodMock,
             removeAllSessions: methodMock,
             removeSession: methodMock,
             removeSessions: methodMock

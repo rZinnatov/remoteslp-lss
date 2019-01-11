@@ -1,6 +1,7 @@
 const Api = require('./Api');
 const Storage = require('./Storage');
 const Service = require('./Service');
+const ExpressJsDriver = require('./drivers/ExpressJsDriver');
 
 module.exports = class Factory {
     constructor(settings) {
@@ -8,11 +9,10 @@ module.exports = class Factory {
         // TODO: Verify the settings object
     }
 
-    createNewApiInstance(service, api) {
+    createNewApiInstance(service, apiDriver, app) {
         return new Api(
-            this.settings.api,
             service || this.createNewServiceInstance(),
-            api
+            apiDriver || new ExpressJsDriver(this.settings.api, app)
         );
     }
     createNewServiceInstance(storage) {
