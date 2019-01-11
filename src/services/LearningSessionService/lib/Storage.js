@@ -8,7 +8,7 @@ module.exports = class Storage {
     }
     
     async stop() {
-        await _stopMongoDbDriver();
+        await this._dbDriver.stop();
     }
     async selectById(id) {
         const sessions = await this._dbDriver.getSessions();

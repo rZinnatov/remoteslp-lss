@@ -237,7 +237,7 @@ test('LearningSessionService API deleteSessions uses "clientId" url param', asyn
     await api._deleteSessions(requestMock, responseMock);
     // </- Run -->
 });
-test('LearningSessionService API catches errors while stopping', async () => {
+test('LearningSessionService API does not catches errors while stopping', async () => {
     const learningSessionServiceMock = TestHelper.createServiceMock();
     learningSessionServiceMock.stop = () =>
         new Promise(_ => { throw new Error(); })
@@ -246,5 +246,5 @@ test('LearningSessionService API catches errors while stopping', async () => {
         .createNewApiInstance(learningSessionServiceMock)
     ;
 
-    await expect(api.stop()).resolves.not.toThrow();
+    await expect(api.stop()).rejects.toThrow();
 });

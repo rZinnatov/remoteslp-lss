@@ -19,13 +19,8 @@ module.exports = class Api {
         this._apiDriver.run();
     }
     async stop() {
-        try {
-            await this._apiDriver.stop();
-            await this._service.stop();
-            
-        } catch(error) {
-            console.error(`RemoteML(${process.pid}): Error while stopping the API: '${error}'`);
-        }
+        await this._apiDriver.stop();
+        await this._service.stop();
     }
 
     async _getSession(request, response) {
