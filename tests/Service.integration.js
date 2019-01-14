@@ -3,8 +3,8 @@ const LearningSessionStates = require('../lib/domain/LearningSessionStates');
 const LearningSessionServiceFactory = require('../index.js');
 
 
-const clientId = 'client-123';
-const anotherClientId = 'another-client-123';
+const userId = 'user-123';
+const anotheruserId = 'another-user-123';
 const factoryOptions = {
     logger: TestHelper.createLoggerMock()
 };
@@ -13,15 +13,15 @@ beforeEach(async () => {
     const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance()
     ;
-    await learningSessionService.removeSessions(clientId);
-    await learningSessionService.removeSessions(anotherClientId);
+    await learningSessionService.removeSessions(userId);
+    await learningSessionService.removeSessions(anotheruserId);
 });
 afterAll(async () => {
     const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance()
     ;
-    await learningSessionService.removeSessions(clientId);
-    await learningSessionService.removeSessions(anotherClientId);
+    await learningSessionService.removeSessions(userId);
+    await learningSessionService.removeSessions(anotheruserId);
 });
 
 test('LearningSessionService can select newly registered session', async () => {
@@ -34,7 +34,7 @@ test('LearningSessionService can select newly registered session', async () => {
             .createNewServiceInstance()
         ;
     
-        registeredSession = await learningSessionService.createSession(clientId);
+        registeredSession = await learningSessionService.createSession(userId);
         selectedSession = await learningSessionService.getSession(registeredSession.id);
 
     } catch (error) {
@@ -43,7 +43,7 @@ test('LearningSessionService can select newly registered session', async () => {
 
     expect(selectedSession).toEqual(registeredSession);
 });
-test('LearningSessionService can select list of sessions of a client', async () => {
+test('LearningSessionService can select list of sessions of a user', async () => {
     let learningSessions = undefined;
     try
     {
@@ -51,19 +51,19 @@ test('LearningSessionService can select list of sessions of a client', async () 
             .createNewServiceInstance()
         ;
     
-        await learningSessionService.createSession(clientId);
-        await learningSessionService.createSession(clientId);
-        await learningSessionService.createSession(clientId);
-        await learningSessionService.createSession(anotherClientId);
+        await learningSessionService.createSession(userId);
+        await learningSessionService.createSession(userId);
+        await learningSessionService.createSession(userId);
+        await learningSessionService.createSession(anotheruserId);
         
-        learningSessions = await learningSessionService.getSessions(clientId);
+        learningSessions = await learningSessionService.getSessions(userId);
 
     } catch (error) {
         expect(error).toBe(undefined);
     }
     
     expect(learningSessions.length).toEqual(3);
-    learningSessions.forEach(session => expect(session.clientId).toEqual(clientId));
+    learningSessions.forEach(session => expect(session.userId).toEqual(userId));
 });
 test('LearningSessionService can update session', async () => {
     let session = undefined;
@@ -76,7 +76,7 @@ test('LearningSessionService can update session', async () => {
             .createNewServiceInstance()
         ;
     
-        session = await learningSessionService.createSession(clientId);
+        session = await learningSessionService.createSession(userId);
         modifiedCount = await learningSessionService.updateSession(
             session.id,
             LearningSessionStates.done
@@ -91,8 +91,8 @@ test('LearningSessionService can update session', async () => {
     expect(session.id).toEqual(updatedSession.id);
 
     expect(session.state).toEqual(LearningSessionStates.init);
-    expect(session.clientId).toEqual(clientId);
+    expect(session.userId).toEqual(userId);
     
     expect(updatedSession.state).toEqual(LearningSessionStates.done);
-    expect(updatedSession.clientId).toEqual(clientId);
+    expect(updatedSession.userId).toEqual(userId);
 });

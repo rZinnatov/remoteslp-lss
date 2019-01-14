@@ -11,15 +11,15 @@ let apiPath;
 let sessionId;
 let expressJsApp;
 let learningSessionService;
-const clientId = 'clientId-123';
-const anotherClientId = 'anotherClientId-123';
+const userId = 'userId-123';
+const anotheruserId = 'anotheruserId-123';
 beforeAll(async () => {
     const factory = new LearningSessionServiceFactory({ logger: TestHelper.createLoggerMock() });
     apiPath = factory.settings.api.path;
 
     learningSessionService = factory.createNewServiceInstance();
-    await learningSessionService.removeSessions(clientId);
-    await learningSessionService.removeSessions(anotherClientId);
+    await learningSessionService.removeSessions(userId);
+    await learningSessionService.removeSessions(anotheruserId);
 
     expressJsApp = express();
     factory.createNewApiInstance({
@@ -28,15 +28,15 @@ beforeAll(async () => {
     });
 });
 beforeEach(async () => {
-    const session = await learningSessionService.createSession(clientId);
+    const session = await learningSessionService.createSession(userId);
     sessionId = session.id;
-    await learningSessionService.createSession(clientId);
-    await learningSessionService.createSession(clientId);
-    await learningSessionService.createSession(anotherClientId);
+    await learningSessionService.createSession(userId);
+    await learningSessionService.createSession(userId);
+    await learningSessionService.createSession(anotheruserId);
 });
 afterEach(async () => {
-    await learningSessionService.removeSessions(clientId);
-    await learningSessionService.removeSessions(anotherClientId);
+    await learningSessionService.removeSessions(userId);
+    await learningSessionService.removeSessions(anotheruserId);
 });
 
 test(`LearningSessionService API GET /session returns session by id`, async () => {
@@ -48,7 +48,7 @@ test(`LearningSessionService API GET /session returns session by id`, async () =
     ;
     
     const actualResponse = JSON.stringify(response.body);
-    const expectedResponse = JSON.stringify(new LearningSession(sessionId, clientId));
+    const expectedResponse = JSON.stringify(new LearningSession(sessionId, userId));
     expect(actualResponse).toEqual(expectedResponse);
 });
 test(`LearningSessionService API GET /session returns 404 if session does not exist`, async () => {
@@ -57,16 +57,16 @@ test(`LearningSessionService API GET /session returns 404 if session does not ex
         .expect(404)
     ;
 });
-test(`LearningSessionService API GET /sessions returns session of a client`, async () => {
+test(`LearningSessionService API GET /sessions returns session of a user`, async () => {
     const response = await request(expressJsApp)
-        .get(`${apiPath}/sessions/${clientId}`)
+        .get(`${apiPath}/sessions/${userId}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect('Content-Type', /utf-8/)
     ;
     
     expect(response.body.length).toEqual(3);
-    response.body.map(s => expect(s.clientId).toEqual(clientId));
+    response.body.map(s => expect(s.userId).toEqual(userId));
 });
 test(`LearningSessionService API GET /sessions returns empty array if there was no match`, async () => {
     const response = await request(expressJsApp)
@@ -80,7 +80,7 @@ test(`LearningSessionService API PUT /session creates new session`, async () => 
     // <-- Create Session -->
     const createResponse = await request(expressJsApp)
         .put(`${apiPath}/session`)
-        .send({ clientId: clientId })
+        .send({ userId: userId })
         .expect(200)
         .expect('Content-Type', /json/)
         .expect('Content-Type', /utf-8/)
@@ -88,7 +88,7 @@ test(`LearningSessionService API PUT /session creates new session`, async () => 
     
     const newSessionId = createResponse.body.id;
     expect(typeof newSessionId).toEqual('string');
-    expect(createResponse.body.clientId).toEqual(clientId);
+    expect(createResponse.body.userId).toEqual(userId);
     expect(createResponse.body.state).toEqual(LearningSessionStates.init);
     // </- Create Session -->
 
@@ -101,7 +101,7 @@ test(`LearningSessionService API PUT /session creates new session`, async () => 
     ;
 
     const actualResponse = JSON.stringify(getResponse.body);
-    const expectedResponse = JSON.stringify(new LearningSession(newSessionId, clientId));
+    const expectedResponse = JSON.stringify(new LearningSession(newSessionId, userId));
     expect(actualResponse).toEqual(expectedResponse);
     // </- Get Session -->
 });
@@ -128,7 +128,7 @@ test(`LearningSessionService API POST /session updates session`, async () => {
     ;
 
     const actualResponse = JSON.stringify(getResponse.body);
-    const expectedResponse = JSON.stringify(new LearningSession(sessionId, clientId, LearningSessionStates.done));
+    const expectedResponse = JSON.stringify(new LearningSession(sessionId, userId, LearningSessionStates.done));
     expect(actualResponse).toEqual(expectedResponse);
     // </- Get Session -->
 });
@@ -164,7 +164,7 @@ test(`LearningSessionService API DELETE /sessions`, async () => {
         
     // <-- Get Session -->
     const getResponse = await request(expressJsApp)
-        .get(`${apiPath}/sessions/${clientId}`)
+        .get(`${apiPath}/sessions/${userId}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect('Content-Type', /utf-8/)
@@ -194,7 +194,7 @@ test(`LearningSessionService API DELETE /session deletes session by id`, async (
     
     // <-- Get Session -->
     const getResponse = await request(expressJsApp)
-        .get(`${apiPath}/sessions/${clientId}`)
+        .get(`${apiPath}/sessions/${userId}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect('Content-Type', /utf-8/)
@@ -214,10 +214,10 @@ test(`LearningSessionService API DELETE /session deletes session by id`, async (
     expect(doubleDeleteResponse.body).toEqual({ deletedCount: 3 });
     // </- Delete Session -->
 });
-test(`LearningSessionService API DELETE /sessions deletes all sessions of a client`, async () => {
+test(`LearningSessionService API DELETE /sessions deletes all sessions of a user`, async () => {
     // <-- Delete Session -->
     const deleteResponse = await request(expressJsApp)
-        .delete(`${apiPath}/sessions/${clientId}`)
+        .delete(`${apiPath}/sessions/${userId}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect('Content-Type', /utf-8/)
@@ -235,7 +235,7 @@ test(`LearningSessionService API DELETE /sessions deletes all sessions of a clie
         
     // <-- Get Session -->
     const getResponse = await request(expressJsApp)
-        .get(`${apiPath}/sessions/${clientId}`)
+        .get(`${apiPath}/sessions/${userId}`)
         .expect(200)
         .expect('Content-Type', /json/)
         .expect('Content-Type', /utf-8/)
@@ -281,12 +281,12 @@ test(`LearningSessionService API catches all error`, async () => {
 
     const requests = [
         request(expressJsApp).get(`${apiPath}/session/${sessionId}`),
-        request(expressJsApp).get(`${apiPath}/sessions/${clientId}`),
+        request(expressJsApp).get(`${apiPath}/sessions/${userId}`),
         request(expressJsApp).put(`${apiPath}/session`),
         request(expressJsApp).post(`${apiPath}/session`),
         request(expressJsApp).delete(`${apiPath}/sessions`),
         request(expressJsApp).delete(`${apiPath}/session/${sessionId}`),
-        request(expressJsApp).delete(`${apiPath}/sessions/${clientId}`)
+        request(expressJsApp).delete(`${apiPath}/sessions/${userId}`)
     ];
 
     requests.forEach(async (request) => {

@@ -33,13 +33,13 @@ test('LearningSessionService API listen on specified port', () => {
 });
 test('LearningSessionService API getSession uses "id" url param', async () => {
     // <-- Prepare -->
-    const clientId = 'clientId-123';
+    const userId = 'userId-123';
     const requestMock = { params: { id: 'id-123' } };
     const responseMock = {
         json: (session) => {
             const expectedSession = new LearningSession(
                 requestMock.params.id,
-                clientId
+                userId
             );
             // <-- Check -->
             expect(session).toEqual(expectedSession);
@@ -52,7 +52,7 @@ test('LearningSessionService API getSession uses "id" url param', async () => {
         // <-- Check -->
         expect(id).toEqual(requestMock.params.id);
         // </- Check -->
-        return new Promise(resolve => resolve(new LearningSession(requestMock.params.id, clientId)));
+        return new Promise(resolve => resolve(new LearningSession(requestMock.params.id, userId)));
     };
     
     const factoryOptions = {
@@ -71,16 +71,16 @@ test('LearningSessionService API getSession uses "id" url param', async () => {
     await api._getSession(requestMock, responseMock);
     // </- Run -->
 });
-test('LearningSessionService API getSessions uses "clientId" url param', async () => {
+test('LearningSessionService API getSessions uses "userId" url param', async () => {
     // <-- Prepare -->
     const id1 = 'id-123-1';
     const id2 = 'id-123-2';
-    const requestMock = { params: { clientId: 'clientId-123' } };
+    const requestMock = { params: { userId: 'userId-123' } };
     const responseMock = {
         json: (sessions) => {
             const expectedSessions = [
-                new LearningSession(id1, requestMock.params.clientId),
-                new LearningSession(id2, requestMock.params.clientId),
+                new LearningSession(id1, requestMock.params.userId),
+                new LearningSession(id2, requestMock.params.userId),
             ];
             // <-- Check -->
             expect(sessions).toEqual(expectedSessions);
@@ -89,13 +89,13 @@ test('LearningSessionService API getSessions uses "clientId" url param', async (
     };
 
     const serviceMock = TestHelper.createServiceMock();
-    serviceMock.getSessions = async (clientId) => {
+    serviceMock.getSessions = async (userId) => {
         // <-- Check -->
-        expect(clientId).toEqual(requestMock.params.clientId);
+        expect(userId).toEqual(requestMock.params.userId);
         // </- Check -->
         const sessions = [
-            new LearningSession(id1, clientId),
-            new LearningSession(id2, clientId),
+            new LearningSession(id1, userId),
+            new LearningSession(id2, userId),
         ];
         return new Promise(resolve => resolve(sessions));
     };
@@ -116,13 +116,13 @@ test('LearningSessionService API getSessions uses "clientId" url param', async (
     await api._getSessions(requestMock, responseMock);
     // </- Run -->
 });
-test('LearningSessionService API createSession uses "clientId" body param', async () => {
+test('LearningSessionService API createSession uses "userId" body param', async () => {
     // <-- Prepare -->
     const id = 'id-123';
-    const requestMock = { body: { clientId: 'clientId-123' } };
+    const requestMock = { body: { userId: 'userId-123' } };
     const responseMock = {
         json: (session) => {
-            const expectedSession = new LearningSession(id, requestMock.body.clientId);
+            const expectedSession = new LearningSession(id, requestMock.body.userId);
             // <-- Check -->
             expect(session).toEqual(expectedSession);
             // </- Check -->
@@ -130,11 +130,11 @@ test('LearningSessionService API createSession uses "clientId" body param', asyn
     };
 
     const serviceMock = TestHelper.createServiceMock();
-    serviceMock.createSession = async (clientId) => {
+    serviceMock.createSession = async (userId) => {
         // <-- Check -->
-        expect(clientId).toEqual(requestMock.body.clientId);
+        expect(userId).toEqual(requestMock.body.userId);
         // </- Check -->
-        const session = new LearningSession(id, requestMock.body.clientId);
+        const session = new LearningSession(id, requestMock.body.userId);
         return new Promise(resolve => resolve(session));
     };
     
@@ -258,9 +258,9 @@ test('LearningSessionService API deleteSession uses "id" url param', async () =>
     await api._deleteSession(requestMock, responseMock);
     // </- Run -->
 });
-test('LearningSessionService API deleteSessions uses "clientId" url param', async () => {
+test('LearningSessionService API deleteSessions uses "userId" url param', async () => {
     // <-- Prepare -->
-    const requestMock = { params: { clientId: 'clientId-123' } };
+    const requestMock = { params: { userId: 'userId-123' } };
     const responseMock = {
         json: (result) => {
             const expectedResult = { deletedCount: 5 };
@@ -271,9 +271,9 @@ test('LearningSessionService API deleteSessions uses "clientId" url param', asyn
     };
 
     const serviceMock = TestHelper.createServiceMock();
-    serviceMock.removeSessions = async (clientId) => {
+    serviceMock.removeSessions = async (userId) => {
         // <-- Check -->
-        expect(clientId).toEqual(requestMock.params.clientId);
+        expect(userId).toEqual(requestMock.params.userId);
         // </- Check -->
         return new Promise(resolve => resolve(5));
     };
