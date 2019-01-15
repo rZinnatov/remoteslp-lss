@@ -6,7 +6,8 @@ const LearningSessionServiceFactory = require('../index.js');
 const userId = 'user-123';
 const anotheruserId = 'another-user-123';
 const factoryOptions = {
-    logger: TestHelper.createLoggerMock()
+    logger: TestHelper.createLoggerMock(),
+    settings: require('./test.settings.json')
 };
 
 beforeEach(async () => {
