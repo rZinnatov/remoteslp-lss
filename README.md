@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/rZinnatov/remoteml-lss.svg?branch=master)](https://travis-ci.org/rZinnatov/remoteml-lss)
+[![codecov](https://codecov.io/gh/rZinnatov/remoteml-lss/branch/master/graph/badge.svg)](https://codecov.io/gh/rZinnatov/remoteml-lss)
 
 # Overview
 ## Learning session service for RemoteML project
