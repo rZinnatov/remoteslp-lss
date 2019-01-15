@@ -76,10 +76,10 @@ test(`LearningSessionService API GET /sessions returns empty array if there was 
 
     expect(response.body).toEqual([]);
 });
-test(`LearningSessionService API PUT /session creates new session`, async () => {
+test(`LearningSessionService API POST /session creates new session`, async () => {
     // <-- Create Session -->
     const createResponse = await request(expressJsApp)
-        .put(`${apiPath}/session`)
+        .post(`${apiPath}/session`)
         .send({ userId: userId })
         .expect(200)
         .expect('Content-Type', /json/)
@@ -105,10 +105,10 @@ test(`LearningSessionService API PUT /session creates new session`, async () => 
     expect(actualResponse).toEqual(expectedResponse);
     // </- Get Session -->
 });
-test(`LearningSessionService API POST /session updates session`, async () => {
+test(`LearningSessionService API PUT /session updates session`, async () => {
     // <-- Update Session -->
     const updateResponse = await request(expressJsApp)
-        .post(`${apiPath}/session`)
+        .put(`${apiPath}/session`)
         .send({ id: sessionId, state: LearningSessionStates.done })
         .expect(200)
         .expect('Content-Type', /json/)
