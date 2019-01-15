@@ -4,7 +4,7 @@
   "description": "Learning session service for RemoteML project",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test:unit && npm run test:integration",
+    "test": "npm run test:unit && npm run test:integration && codecov",
     "test:unit": "jest --testRegex=\".+/tests/.*\\.unit\\.js\" --forceExit --detectOpenHandles",
     "test:integration": "jest --testRegex=\".+/tests/.*\\.integration\\.js\" --forceExit --detectOpenHandles",
     "start": "node run.js"
@@ -20,5 +20,9 @@
   "devDependencies": {
     "jest": "^23.6.0",
     "supertest": "^3.3.0"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   }
 }
