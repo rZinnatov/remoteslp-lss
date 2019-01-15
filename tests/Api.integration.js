@@ -17,12 +17,12 @@ beforeAll(async () => {
     const factory = new LearningSessionServiceFactory({ logger: TestHelper.createLoggerMock() });
     apiPath = factory.settings.api.path;
 
-    learningSessionService = factory.createNewServiceInstance();
+    learningSessionService = await factory.createNewServiceInstance();
     await learningSessionService.removeSessions(userId);
     await learningSessionService.removeSessions(anotheruserId);
 
     expressJsApp = express();
-    factory.createNewApiInstance({
+    await factory.createNewApiInstance({
         service: learningSessionService,
         expressJsApp: expressJsApp
     });
@@ -265,7 +265,7 @@ test(`LearningSessionService API catches all error`, async () => {
     );
 
     const expressJsApp = express();
-    const api = factory.createNewApiInstance({
+    const api = await factory.createNewApiInstance({
         service: learningSessionServiceMock,
         expressJsApp: expressJsApp
     });

@@ -15,10 +15,10 @@ const factoryOptions = {
 test('LearningSessionService.getSession returns a valid session', async () => {
     // <-- Prepare -->
     const fakeSession = { _id: fakeId, userId: fakeuserId, state: fakeState };
-    const storageMock = {
+    const storageMock = { sessions: {
         selectById: () => new Promise(resolve => resolve(fakeSession))
-    };
-    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+    }};
+    const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance(storageMock)
     ;
     // </- Prepare -->
@@ -35,10 +35,10 @@ test('LearningSessionService.getSessions returns a valid sessions', async () => 
     // <-- Prepare -->
     const fakeSession = { _id: fakeId, userId: fakeuserId, state: fakeState };
     const fakeSessions = [fakeSession, fakeSession, fakeSession];
-    const storageMock = {
+    const storageMock = { sessions: {
         where: () => new Promise(resolve => resolve(fakeSessions))
-    };
-    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+    }};
+    const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance(storageMock)
     ;
     // </- Prepare -->
@@ -54,10 +54,10 @@ test('LearningSessionService.getSessions returns a valid sessions', async () => 
 test('LearningSessionService.createSession returns a valid session', async () => {
     // <-- Prepare -->
     const fakeItem = { _id: fakeId, userId: fakeuserId, state: LearningSessionStates.init };
-    const storageMock = {
+    const storageMock = { sessions: {
         insert: () => new Promise(resolve => resolve(fakeItem))
-    };
-    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+    }};
+    const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance(storageMock)
     ;
     // </- Prepare -->

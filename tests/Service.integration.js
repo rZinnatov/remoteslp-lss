@@ -10,14 +10,14 @@ const factoryOptions = {
 };
 
 beforeEach(async () => {
-    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+    const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance()
     ;
     await learningSessionService.removeSessions(userId);
     await learningSessionService.removeSessions(anotheruserId);
 });
 afterAll(async () => {
-    const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+    const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
         .createNewServiceInstance()
     ;
     await learningSessionService.removeSessions(userId);
@@ -30,7 +30,7 @@ test('LearningSessionService can select newly registered session', async () => {
 
     try
     {
-        const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+        const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
             .createNewServiceInstance()
         ;
     
@@ -47,7 +47,7 @@ test('LearningSessionService can select list of sessions of a user', async () =>
     let learningSessions = undefined;
     try
     {
-        const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+        const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
             .createNewServiceInstance()
         ;
     
@@ -72,7 +72,7 @@ test('LearningSessionService can update session', async () => {
 
     try
     {
-        const learningSessionService = new LearningSessionServiceFactory(factoryOptions)
+        const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
             .createNewServiceInstance()
         ;
     
