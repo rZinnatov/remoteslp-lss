@@ -300,7 +300,8 @@ test('LearningSessionService API does not catches errors while stopping', async 
         new Promise(_ => { throw new Error(); })
     ;
     const factoryOptions = {
-        logger: TestHelper.createLoggerMock()
+        logger: TestHelper.createLoggerMock(),
+        settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
         .createApi({ service: learningSessionServiceMock })

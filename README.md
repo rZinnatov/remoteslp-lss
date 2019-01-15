@@ -8,7 +8,7 @@ The service provides a client with a learning session
 
 # How to run
 1. Clone or download this repository
-2. `$ mv settings.example.json settings.json`
+2. `$ mv example.settings.json settings.json`
 3. Populate `settings.json` with real values *(see comments inside)*
 4. `$ npm start`
 

@@ -13,8 +13,13 @@ let expressJsApp;
 let learningSessionService;
 const userId = 'userId-123';
 const anotheruserId = 'anotheruserId-123';
+const factoryOptions = {
+    logger: TestHelper.createLoggerMock(),
+    settings: require('./test.settings.json')
+};
+
 beforeAll(async () => {
-    const factory = new LearningSessionServiceFactory({ logger: TestHelper.createLoggerMock() });
+    const factory = new LearningSessionServiceFactory(factoryOptions);
     apiPath = factory.settings.api.path;
 
     learningSessionService = await factory.createService();
@@ -256,7 +261,7 @@ test(`LearningSessionService API DELETE /sessions deletes all sessions of a user
     // </- Delete Session -->
 });
 test(`LearningSessionService API catches all error`, async () => {
-    const factory = new LearningSessionServiceFactory({ logger: TestHelper.createLoggerMock() });
+    const factory = new LearningSessionServiceFactory(factoryOptions);
     apiPath = factory.settings.api.path;
 
     const errorMessage = 'errorMessage';

@@ -1,0 +1,11 @@
+{
+    "api": {
+        "port": 3000,
+        "path": "/api/v1"
+    },
+    "storage": {
+        "url": "mongodb://dbuser:dbpass1@ds145474.mlab.com:45474/remoteml",
+        "dbName": "remoteml",
+        "collectionName": "learning_sessions"
+    }
+}
