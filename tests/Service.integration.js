@@ -1,5 +1,5 @@
 const TestHelper = require('./TestHelper');
-const LearningSessionStates = require('../lib/entities/LearningSessionStates');
+const LearningSessionStates = require('../lib/domain/entities/LearningSessionStates');
 const LearningSessionServiceFactory = require('../index.js');
 
 
@@ -11,14 +11,14 @@ const factoryOptions = {
 
 beforeEach(async () => {
     const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewServiceInstance()
+        .createService()
     ;
     await learningSessionService.removeSessions(userId);
     await learningSessionService.removeSessions(anotheruserId);
 });
 afterAll(async () => {
     const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewServiceInstance()
+        .createService()
     ;
     await learningSessionService.removeSessions(userId);
     await learningSessionService.removeSessions(anotheruserId);
@@ -31,7 +31,7 @@ test('LearningSessionService can select newly registered session', async () => {
     try
     {
         const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-            .createNewServiceInstance()
+            .createService()
         ;
     
         registeredSession = await learningSessionService.createSession(userId);
@@ -48,7 +48,7 @@ test('LearningSessionService can select list of sessions of a user', async () =>
     try
     {
         const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-            .createNewServiceInstance()
+            .createService()
         ;
     
         await learningSessionService.createSession(userId);
@@ -73,7 +73,7 @@ test('LearningSessionService can update session', async () => {
     try
     {
         const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-            .createNewServiceInstance()
+            .createService()
         ;
     
         session = await learningSessionService.createSession(userId);

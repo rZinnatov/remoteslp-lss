@@ -2,8 +2,8 @@ const express = require('express');
 const request = require('supertest');
 
 const TestHelper = require('./TestHelper');
-const LearningSession = require('../lib/entities/LearningSession');
-const LearningSessionStates = require('../lib/entities/LearningSessionStates');
+const LearningSession = require('../lib/domain/entities/LearningSession');
+const LearningSessionStates = require('../lib/domain/entities/LearningSessionStates');
 const LearningSessionServiceFactory = require('../index');
 
 
@@ -17,12 +17,12 @@ beforeAll(async () => {
     const factory = new LearningSessionServiceFactory({ logger: TestHelper.createLoggerMock() });
     apiPath = factory.settings.api.path;
 
-    learningSessionService = await factory.createNewServiceInstance();
+    learningSessionService = await factory.createService();
     await learningSessionService.removeSessions(userId);
     await learningSessionService.removeSessions(anotheruserId);
 
     expressJsApp = express();
-    await factory.createNewApiInstance({
+    await factory.createApi({
         service: learningSessionService,
         expressJsApp: expressJsApp
     });
@@ -265,7 +265,7 @@ test(`LearningSessionService API catches all error`, async () => {
     );
 
     const expressJsApp = express();
-    const api = await factory.createNewApiInstance({
+    const api = await factory.createApi({
         service: learningSessionServiceMock,
         expressJsApp: expressJsApp
     });

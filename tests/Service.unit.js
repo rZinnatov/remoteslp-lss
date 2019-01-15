@@ -1,6 +1,6 @@
 const TestHelper = require('./TestHelper');
-const LearningSession = require('../lib/entities/LearningSession');
-const LearningSessionStates = require('../lib/entities/LearningSessionStates');
+const LearningSession = require('../lib/domain/entities/LearningSession');
+const LearningSessionStates = require('../lib/domain/entities/LearningSessionStates');
 const LearningSessionServiceFactory = require('../index.js');
 
 
@@ -19,7 +19,7 @@ test('LearningSessionService.getSession returns a valid session', async () => {
         selectById: () => new Promise(resolve => resolve(fakeSession))
     }};
     const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewServiceInstance(storageMock)
+        .createService(storageMock)
     ;
     // </- Prepare -->
     
@@ -39,7 +39,7 @@ test('LearningSessionService.getSessions returns a valid sessions', async () => 
         where: () => new Promise(resolve => resolve(fakeSessions))
     }};
     const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewServiceInstance(storageMock)
+        .createService(storageMock)
     ;
     // </- Prepare -->
     
@@ -58,7 +58,7 @@ test('LearningSessionService.createSession returns a valid session', async () =>
         insert: () => new Promise(resolve => resolve(fakeItem))
     }};
     const learningSessionService = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewServiceInstance(storageMock)
+        .createService(storageMock)
     ;
     // </- Prepare -->
     

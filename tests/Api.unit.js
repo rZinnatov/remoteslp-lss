@@ -1,5 +1,5 @@
 const TestHelper = require('./TestHelper');
-const LearningSession = require('../lib/entities/LearningSession');
+const LearningSession = require('../lib/domain/entities/LearningSession');
 const LearningSessionServiceFactory = require('../index');
 
 
@@ -20,7 +20,7 @@ test('LearningSessionService API listen on specified port', async () => {
         settings: settingsMock
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: TestHelper.createServiceMock(),
             expressJsApp: expressMock
         })
@@ -60,7 +60,7 @@ test('LearningSessionService API getSession uses "id" url param', async () => {
         settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: serviceMock,
             expressJsApp: TestHelper.createExpressMock()
         })
@@ -105,7 +105,7 @@ test('LearningSessionService API getSessions uses "userId" url param', async () 
         settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: serviceMock,
             expressJsApp: TestHelper.createExpressMock()
         })
@@ -143,7 +143,7 @@ test('LearningSessionService API createSession uses "userId" body param', async 
         settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: serviceMock,
             expressJsApp: TestHelper.createExpressMock()
         })
@@ -179,7 +179,7 @@ test('LearningSessionService API updateSession', async () => {
         settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: serviceMock,
             expressJsApp: TestHelper.createExpressMock()
         })
@@ -211,7 +211,7 @@ test('LearningSessionService API deleteAllSessions', async () => {
         settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: serviceMock,
             expressJsApp: TestHelper.createExpressMock()
         })
@@ -247,7 +247,7 @@ test('LearningSessionService API deleteSession uses "id" url param', async () =>
         settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: serviceMock,
             expressJsApp: TestHelper.createExpressMock()
         })
@@ -283,7 +283,7 @@ test('LearningSessionService API deleteSessions uses "userId" url param', async 
         settings: TestHelper.createSettingsMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({
+        .createApi({
             service: serviceMock,
             expressJsApp: TestHelper.createExpressMock()
         })
@@ -303,7 +303,7 @@ test('LearningSessionService API does not catches errors while stopping', async 
         logger: TestHelper.createLoggerMock()
     };
     const api = await new LearningSessionServiceFactory(factoryOptions)
-        .createNewApiInstance({ service: learningSessionServiceMock })
+        .createApi({ service: learningSessionServiceMock })
     ;
 
     await expect(api.stop()).rejects.toThrow();

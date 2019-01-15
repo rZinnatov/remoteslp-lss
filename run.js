@@ -1,8 +1,8 @@
-const registerProcessEventHandlers = require('./lib/util').registerProcessEventHandlers;
-const LearningSessionServiceFactory = require('./index');
+const registerProcessEventHandlers = require('./lib/infrastructure/util').registerProcessEventHandlers;
+const LearningSessionMicroServiceFactory = require('./index');
 
-new LearningSessionServiceFactory()
-    .createNewApiInstance()
+new LearningSessionMicroServiceFactory()
+    .createApi()
     .then(api => {
         registerProcessEventHandlers(api);
         api.run();
