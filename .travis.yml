@@ -6,9 +6,11 @@ install:
   - npm install -g codecov
 before_script:
   - ./deploy/create-settings-file.sh
-  - echo settings.json
+  - cat settings.json
 after_success:
-  - ./deploy/docker-build-and-push.sh
+  - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+  - docker build -f ./deploy/docker/Dockerfile -t rzinnatov/remoteml-lss:latest .
+  - docker push rzinnatov/remoteml-lss:latest
 cache:
   directories:
     - "node_modules"
