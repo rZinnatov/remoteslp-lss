@@ -1,7 +1,14 @@
 language: node_js
 node_js: "lts/*"
+services:
+  - docker
 install:
   - npm install -g codecov
+before_script:
+  - ./deploy/create-settings-file.sh
+  - echo settings.json
+after_success:
+  - ./deploy/docker-build-and-push.sh
 cache:
   directories:
     - "node_modules"

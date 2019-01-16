@@ -1,0 +1,7 @@
+.git
+node_modules
+tests
+
+.gitignore
+.travis.yml
+example.settings.json
