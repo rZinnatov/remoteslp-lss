@@ -1,7 +1,9 @@
 .git
-node_modules
 tests
+deploy
+node_modules
 
 .gitignore
+.dockerignore
 .travis.yml
 example.settings.json
