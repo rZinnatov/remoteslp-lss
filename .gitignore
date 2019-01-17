@@ -82,5 +82,6 @@ typings/
 # VS Code
 .vscode/
 
-# custom
+
+# sensitive
 settings.json

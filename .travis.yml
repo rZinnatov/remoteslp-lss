@@ -2,12 +2,17 @@ language: node_js
 node_js: "lts/*"
 services:
   - docker
+before_install:
+  - pwd
+  - cd src
+  - pwd
 install:
   - npm install -g codecov
 before_script:
+  - pwd
   - ./deploy/create-settings-file.sh
-  - ls -la
 after_success:
+  - pwd
   - ./deploy/docker-build-and-push.sh
 cache:
   directories:

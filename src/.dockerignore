@@ -1,11 +1,5 @@
-.git
 tests
-deploy
 node_modules
 
-.gitignore
 .dockerignore
-.travis.yml
-README.md
-LICENSE
 example.settings.json
