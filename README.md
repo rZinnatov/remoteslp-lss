@@ -14,7 +14,7 @@ The service provides a client with a learning session
 ```
 $ docker run -p 7070:80 rzinnatov/remoteml-lss:latest
 ```
-To ensure all is well you can try to GET sessions of a not existing user. Empty array `[]` should be returned.
+To ensure the service is up you can try to GET sessions of a not existing user. Empty array `[]` should be returned.
 ```
 $ curl http://localhost:7070/api/v1/sessions/not-existing-user-id
 []
