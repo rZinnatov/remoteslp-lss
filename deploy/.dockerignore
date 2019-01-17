@@ -1,5 +1,6 @@
 tests
 node_modules
 
+Dockerfile
 .dockerignore
 example.settings.json
