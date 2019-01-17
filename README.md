@@ -10,6 +10,17 @@ The service provides a client with a learning session
 
 
 # How to run
+## via Docker
+```
+$ docker run -p 7070:80 rzinnatov/remoteml-lss:latest
+```
+To ensure all is well you can try to GET sessions of a not existing user. Empty array `[]` should be returned.
+```
+$ curl http://localhost:7070/api/v1/sessions/not-existing-user-id
+[]
+```
+ 
+## via Node
 1. Clone or download this repository
 2. `$ mv example.settings.json settings.json`
 3. Populate `settings.json` with real values *(see comments inside)*
