@@ -4,11 +4,9 @@ services:
   - docker
 before_install:
   - cd src
-  - ls -la
 install:
   - npm install
   - npm install -g codecov
-  - ls -la
 before_script:
   - ./../deploy/create-settings-file.sh
 after_success:
