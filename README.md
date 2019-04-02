@@ -2,7 +2,7 @@
 [![codecov](https://codecov.io/gh/rZinnatov/remoteml-lss/branch/master/graph/badge.svg)](https://codecov.io/gh/rZinnatov/remoteml-lss)
 
 # Overview
-## Learning session service for RemoteML project
+## Learning session service for RemoteSLP project
 
 The service provides a client with a learning session
 
