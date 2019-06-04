@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/rZinnatov/remoteml-lss.svg?branch=master)](https://travis-ci.org/rZinnatov/remoteml-lss)
+[![Build Status](https://travis-ci.org/rZinnatov/remoteslp-lss.svg?branch=master)](https://travis-ci.org/rZinnatov/remoteslp-lss)
 [![codecov](https://codecov.io/gh/rZinnatov/remoteml-lss/branch/master/graph/badge.svg)](https://codecov.io/gh/rZinnatov/remoteml-lss)
 
 # Overview
